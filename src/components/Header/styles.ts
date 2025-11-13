@@ -47,6 +47,7 @@ export const Context = styled.nav`
     letter-spacing: 1.5px;
     transition: all 0.3s ease;
     line-height: 80px;
+    cursor: pointer;
 
     &::after {
       content: "";
