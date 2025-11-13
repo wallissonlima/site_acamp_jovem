@@ -2,6 +2,8 @@ import { Route, Routes } from "react-router-dom";
 import { Home } from "./src/pages/home";
 import { ToastContainer } from "react-toastify";
 import { ProtectedRoute } from "./src/config/protectedRoute";
+import { Cronograma } from "./src/pages/cronograma";
+import { Contato } from "./src/pages/contato";
 
 
 export function Router() {
@@ -27,23 +29,23 @@ export function Router() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/cronograma"
+          element={
+            <ProtectedRoute>
+              <Cronograma />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Contato"
+          element={
+            <ProtectedRoute>
+              <Contato />
+            </ProtectedRoute>
+          }
+        />
         {/* <Route
-          path="/contato"
-          element={
-            <ProtectedRoute>
-              <ContatoPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/produtos"
-          element={
-            <ProtectedRoute>
-              <Produtos />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/carrinho"
           element={
             <ProtectedRoute>

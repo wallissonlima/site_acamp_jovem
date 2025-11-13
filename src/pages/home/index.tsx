@@ -1,8 +1,9 @@
 import { CustomCarousel } from "../../components/Carousel";
-import { EventTimeline } from "../../components/EventTimeline";
+// import { EventTimeline } from "../../components/EventTimeline";
 import { Footer } from "../../components/footer";
 import { Header } from "../../components/Header";
 import {
+    ButtonClose,
     Content,
     CustomButton,
     DepoiContent,
@@ -22,14 +23,15 @@ import acampa from "../../assets/test.png";
 import jovem from "../../assets/image.png";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { useState } from "react";
+import { FormAcampa } from "../../operaction/formAcampa";
 
 // 🔹 Dados fixos fora do componente (melhor performance)
-const milestones = [
-    { id: 1, title: "Lançar página do evento", date: "2025-11-20", note: "Página com formulário de inscrição" },
-    { id: 2, title: "Início das inscrições", date: "2026-01-15", note: "Abertura das inscrições" },
-    { id: 3, title: "Última chamada", date: "2026-07-20", note: "Preparação final" },
-    { id: 4, title: "Dia do Evento", date: "2026-07-30", note: "Grande dia!" },
-];
+// const milestones = [
+//     { id: 1, title: "Lançar página do evento", date: "2025-11-20", note: "Página com formulário de inscrição" },
+//     { id: 2, title: "Início das inscrições", date: "2026-01-15", note: "Abertura das inscrições" },
+//     { id: 3, title: "Última chamada", date: "2026-07-20", note: "Preparação final" },
+//     { id: 4, title: "Dia do Evento", date: "2026-07-30", note: "Grande dia!" },
+// ];
 
 const eventos = [
     { id: 1, descricao: "Acamapa Jovem", imagem: logo },
@@ -47,13 +49,13 @@ export const Home = () => {
                 <CustomCarousel />
 
                 {/* 🗓️ Cronograma */}
-                <section id="cronograma">
+                {/* <section id="cronograma">
                     <EventTimeline
                         eventDate="2026-07-30T18:00:00"
                         title="Contagem Regressiva para o Evento"
                         milestones={milestones}
                     />
-                </section>
+                </section> */}
 
                 {/* 🎉 Seção de eventos */}
                 <Section id="eventos">
@@ -76,7 +78,7 @@ export const Home = () => {
                         <p>Informações adicionais sobre o evento.</p>
 
                         <EventButton>
-                            <CustomButton onClick={() => setOpenInscricao(true)}>Inscrição</CustomButton>
+                            <CustomButton onClick={() => setOpenInscricao(true)}>Inscrições</CustomButton>
                         </EventButton>
                     </EventInfo>
 
@@ -142,20 +144,24 @@ export const Home = () => {
             <Modal isOpen={openInscricao} centered={true} size="lg">
                 <ModalHeader>
                     <h2 style={{ fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>
-                        Cadastra novo produto
+                        ACAMPA JOVEM 2025 – INSCRIÇÃO
                     </h2>
                 </ModalHeader>
-                <ModalBody>
-                    {/* <CadProdutos /> */}
+                <ModalBody >
+                    <p style={{ textAlign: "center", marginBottom: "1.5rem", color: "#1f5f5b" }}>
+                        Idade para participar: 14 a 21 anos <br />
+                        Preencha com atenção todos os campos. Essa ficha não poderá ser alterada.
+                    </p>
+                    <FormAcampa />
                 </ModalBody>
-                <ModalFooter>
+                <ModalFooter style={{ padding: 5 }}>
                     <CustomButton
                         type="submit">
-                        Salva
+                        ENVIAR INSCRIÇÃO
                     </CustomButton>
-                    {/* <ButtonClose type="button" onClick={() => setOpenCadastroCliente(!openCadastroCliente)}>
+                    <ButtonClose type="button" onClick={() => setOpenInscricao(!openInscricao)}>
                         Cancelar
-                    </ButtonClose> */}
+                    </ButtonClose>
                 </ModalFooter>
             </Modal>
         </>

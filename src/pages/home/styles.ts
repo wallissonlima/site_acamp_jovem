@@ -163,6 +163,23 @@ export const CustomButton = styled.button`
   }
 `;
 
+export const ButtonClose = styled.button`
+  background: transparent;
+  border: 2px solid #d61818ff;
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #df1616ff;
+    color: #fff;
+    transform: scale(1.05);
+  }
+`;
+
 /* ====== INFO DO EVENTO ====== */
 export const EventInfo = styled.article`
   display: flex;

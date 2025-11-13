@@ -41,7 +41,11 @@ export const Header: React.FC = () => {
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ms-auto" navbar>
             <NavItem>
-              <NavLink onClick={() => scrollToSection("cronograma")}>
+              <NavLink
+                tag={Link}
+                to="/home"
+                className={location.pathname === "/home" ? "active" : ""}
+              >
                 Inicio
               </NavLink>
             </NavItem>
@@ -58,6 +62,24 @@ export const Header: React.FC = () => {
             <NavItem>
               <NavLink onClick={() => scrollToSection("depoimentos")}>
                 Depoimentos
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                tag={Link}
+                to="/cronograma"
+                className={location.pathname === "/cronograma" ? "active" : ""}
+              >
+                Cronograma
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                tag={Link}
+                to="/contato"
+                className={location.pathname === "/contato" ? "active" : ""}
+              >
+                Contato
               </NavLink>
             </NavItem>
           </Nav>
