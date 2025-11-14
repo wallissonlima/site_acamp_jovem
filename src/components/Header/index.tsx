@@ -12,16 +12,32 @@ import {
   NavLink,
 } from "reactstrap";
 import { ShoppingCart, User } from "phosphor-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export const Header: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
 
   // 🔹 Função para scroll suave
   const scrollToSection = (id: string) => {
+    // Se NÃO estiver na home → ir para a home antes
+    if (location.pathname !== "/home") {
+      navigate("/home");
+
+      setTimeout(() => {
+        const section = document.getElementById(id);
+        if (section) {
+          section.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 300); // tempo para a /home carregar
+
+      return;
+    }
+
+    // Se já estiver na /home, apenas scrolla
     const section = document.getElementById(id);
     if (section) {
       section.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -49,21 +65,25 @@ export const Header: React.FC = () => {
                 Inicio
               </NavLink>
             </NavItem>
+
             <NavItem>
               <NavLink onClick={() => scrollToSection("eventos")}>
                 Eventos
               </NavLink>
             </NavItem>
+
             <NavItem>
               <NavLink onClick={() => scrollToSection("acampajovem")}>
                 Acampa Jovem
               </NavLink>
             </NavItem>
+
             <NavItem>
               <NavLink onClick={() => scrollToSection("depoimentos")}>
                 Depoimentos
               </NavLink>
             </NavItem>
+
             <NavItem>
               <NavLink
                 tag={Link}
@@ -73,6 +93,7 @@ export const Header: React.FC = () => {
                 Cronograma
               </NavLink>
             </NavItem>
+
             <NavItem>
               <NavLink
                 tag={Link}
