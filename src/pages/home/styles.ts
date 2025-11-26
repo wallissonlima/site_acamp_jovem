@@ -58,10 +58,12 @@ export const Section = styled.section`
 /* ====== GRADE DE EVENTOS ====== */
 export const EventosGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* mantém responsivo */
+  
   gap: 20px;
   margin: 0 auto;
   padding: 20px;
+  justify-content: center;
 `;
 
 /* ====== CARD DE EVENTO ====== */
@@ -81,9 +83,10 @@ export const EventCard = styled.div<{ selected?: boolean }>`
 
   img {
     width: 100%;
-    border-radius: 8px;
+    height: 200px;        /* tamanho fixo do card */
+    object-fit: cover;    /* corta sem distorcer */
+    border-radius: 10px;
     margin-bottom: 10px;
-    object-fit: cover;
   }
 
   h3 {

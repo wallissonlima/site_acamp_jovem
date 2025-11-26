@@ -6,6 +6,8 @@ import { Cronograma } from "./src/pages/cronograma";
 import { Contato } from "./src/pages/contato";
 import { LoginAdmin } from "./src/pages/admin/login";
 import { DashboardAdmin } from "./src/pages/admin/DashboardAdmin";
+import { EventosEditor } from "./src/pages/admin/EventosEditor";
+import { HomeEditor } from "./src/pages/admin/HomeEditor";
 
 export function Router() {
   return (
@@ -30,12 +32,14 @@ export function Router() {
         <Route path="/contato" element={<Contato />} />
 
         {/* ROTAS DO ADMIN */}
+        <Route path="/admin/home" element={<HomeEditor />} />
         <Route path="/admin/login" element={<LoginAdmin />} />
+        <Route path="/admin/eventos" element={<EventosEditor />} />
         <Route
           path="/admin/dashboard"
           element={
             <ProtectedRoute>
-              <DashboardAdmin />
+              <HomeEditor />
             </ProtectedRoute>
           }
         />

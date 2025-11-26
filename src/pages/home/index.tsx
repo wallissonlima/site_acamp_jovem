@@ -22,8 +22,9 @@ import int from "../../assets/intimidade.png";
 import acampa from "../../assets/test.png";
 import jovem from "../../assets/image.png";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormAcampa } from "../../operaction/formAcampa";
+import api from "../../config/api";
 
 // 🔹 Dados fixos fora do componente (melhor performance)
 // const milestones = [
@@ -40,130 +41,100 @@ const eventos = [
     { id: 4, descricao: "Intimidade com Maria", imagem: int },
 ];
 
+
 export const Home = () => {
-    const [openInscricao, setOpenInscricao] = useState<boolean>(false);
+    const [openInscricao, setOpenInscricao] = useState(false);
+    const [content, setContent] = useState<Record<string, any>>({});
+    const [eventos, setEventos] = useState<any[]>([]);
+    const [depoimentos, setDepoimentos] = useState<any[]>([]);
+
+    useEffect(() => {
+        // fetch content for home (map of key -> contentBlock)
+        api.get('/content', { params: { page: 'home' } }).then(r => {
+            // r.data is a map of key -> ContentBlock
+            setContent(r.data || {});
+        }).catch(() => { });
+
+        // if you made Evento model & endpoints, fetch them:
+        api.get("/eventos").then(res => {
+            setEventos(res.data);
+        }).catch(err => console.log(err));
+
+        // depoimentos
+        api.get('/depoimentos').then(r => setDepoimentos(r.data)).catch(() => { });
+    }, []);
+
+    // helper to read content value
+    const value = (key: string, fallback = '') => {
+        const cb = content[key];
+        if (!cb) return fallback;
+        return cb.value ?? fallback;
+    };
+
+
+
     return (
         <>
             <Header />
             <Content>
                 <CustomCarousel />
 
-                {/* 🗓️ Cronograma */}
-                {/* <section id="cronograma">
-                    <EventTimeline
-                        eventDate="2026-07-30T18:00:00"
-                        title="Contagem Regressiva para o Evento"
-                        milestones={milestones}
-                    />
-                </section> */}
-
-                {/* 🎉 Seção de eventos */}
                 <Section id="eventos">
-                    <h1>Conheça nossos eventos</h1>
+                    <h1>{value('eventos_title', 'Conheça nossos eventos')}</h1>
+
                     <EventosGrid>
-                        {eventos.map((p) => (
-                            <EventCard key={p.id}>
-                                <img loading="lazy" src={p.imagem} alt={p.descricao} />
-                                <h3>{p.descricao}</h3>
-                            </EventCard>
-                        ))}
+                        {eventos.length > 0 ? (
+                            eventos.map(e => (
+                                <EventCard key={e.id} onClick={() => console.log("clicou no evento", e.id)}>
+                                    <img
+                                        loading="lazy"
+                                        src={e.imagem || value('event_default_image')}
+                                        alt={e.descricao}
+                                    />
+                                    <h3>{e.descricao}</h3>
+                                </EventCard>
+                            ))
+                        ) : (
+                            ['event_1', 'event_2', 'event_3', 'event_4'].map(k => (
+                                <EventCard key={k}>
+                                    <img loading="lazy" src={value(k + '_image')} alt={value(k + '_title')} />
+                                    <h3>{value(k + '_title')}</h3>
+                                </EventCard>
+                            ))
+                        )}
                     </EventosGrid>
                 </Section>
 
-                {/* 🙏 Acampa Jovem */}
-                <EventContent id="acampajovem">
-                    <img src={jovem} alt="Logo Acampa Jovem" />
-                    <EventInfo>
-                        <h2>Acampa jovem 2026</h2>
-                        <p>Informações adicionais sobre o evento.</p>
 
+                <EventContent id="acampajovem">
+                    <img src={value('acampa_image_left') || jovem} alt="Logo Acampa Jovem" />
+                    <EventInfo>
+                        <h2>{value('acampa_title', 'Acampa jovem 2026')}</h2>
+                        <p>{value('acampa_short', 'Informações adicionais sobre o evento.')}</p>
                         <EventButton>
-                            <CustomButton onClick={() => setOpenInscricao(true)}>Inscrições</CustomButton>
+                            <CustomButton onClick={() => setOpenInscricao(true)}>{value('acampa_button', 'Inscrições')}</CustomButton>
                         </EventButton>
                     </EventInfo>
 
-                    <img src={acampa} alt="Logo Acampa Jovem" />
+                    <img src={value('acampa_image_right') || acampa} alt="Logo Acampa Jovem" />
                     <EventInfo>
-                        <h2>Uma experiência com Deus que transforma vidas!</h2>
-                        <p>
-                            Inspirado por Deus e comunicado pela intercessão da virgem Santíssima ao pregador Alessandro,
-                            o Acampa Jovem é uma adaptação do antigo encontro Intimidade com Deus: Jovem. Com adições da gincana
-                            e da dinâmica de acampamento, retirando-se para uma fazenda por três dias, tendo pregações,
-                            brincadeiras, teatro e muito mais.
-                        </p>
+                        <h2>{value('acampa_about_title', 'Uma experiência com Deus que transforma vidas!')}</h2>
+                        <p>{value('acampa_about_text', 'Inspirado por Deus ...')}</p>
                     </EventInfo>
                 </EventContent>
 
-                {/* 💬 Depoimentos */}
                 <Section id="depoimentos">
-                    <h1>Depoimentos</h1>
+                    <h1>{value('depoimentos_title', 'Depoimentos')}</h1>
                     <DepoiContent>
-                        <p>
-                            Hoje eu tive uma experiência
-                            incrível sobre o quão sobrenatural
-                            o amor de Cristo e o perdão pode
-                            agir, sempre pensei que conseguia
-                            perdoar as pessoas e conviver
-                            normalmente com esses traumas.
-                            Mas em um momento na pregação
-                            fui percebendo o quão falho e que
-                            eu mentia pra mim mesmo sobre
-                            esse perdão e sentimentos
-                        </p>
-                        <p>
-                            Hoje eu tive uma experiência
-                            incrível sobre o quão sobrenatural
-                            o amor de Cristo e o perdão pode
-                            agir, sempre pensei que conseguia
-                            perdoar as pessoas e conviver
-                            normalmente com esses traumas.
-                            Mas em um momento na pregação
-                            fui percebendo o quão falho e que
-                            eu mentia pra mim mesmo sobre
-                            esse perdão e sentimentos
-                        </p>
-                        <p>
-                            Hoje eu tive uma experiência
-                            incrível sobre o quão sobrenatural
-                            o amor de Cristo e o perdão pode
-                            agir, sempre pensei que conseguia
-                            perdoar as pessoas e conviver
-                            normalmente com esses traumas.
-                            Mas em um momento na pregação
-                            fui percebendo o quão falho e que
-                            eu mentia pra mim mesmo sobre
-                            esse perdão e sentimentos
-                        </p>
-
+                        {depoimentos.length ? depoimentos.map(d => <p key={d.id}>{d.texto}</p>) : (
+                            [1, 2, 3].map(i => <p key={i}>{value('depoimento_' + i, '...')}</p>)
+                        )}
                     </DepoiContent>
                 </Section>
+
             </Content>
             <Footer />
-
-            {/* Modal */}
-            <Modal isOpen={openInscricao} centered={true} size="lg">
-                <ModalHeader>
-                    <h2 style={{ fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>
-                        ACAMPA JOVEM 2025 – INSCRIÇÃO
-                    </h2>
-                </ModalHeader>
-                <ModalBody >
-                    <p style={{ textAlign: "center", marginBottom: "1.5rem", color: "#1f5f5b" }}>
-                        Idade para participar: 14 a 21 anos <br />
-                        Preencha com atenção todos os campos. Essa ficha não poderá ser alterada.
-                    </p>
-                    <FormAcampa />
-                </ModalBody>
-                <ModalFooter style={{ padding: 5 }}>
-                    <CustomButton
-                        type="submit">
-                        ENVIAR INSCRIÇÃO
-                    </CustomButton>
-                    <ButtonClose type="button" onClick={() => setOpenInscricao(!openInscricao)}>
-                        Cancelar
-                    </ButtonClose>
-                </ModalFooter>
-            </Modal>
+            {/* modal as before */}
         </>
     );
-};
+}

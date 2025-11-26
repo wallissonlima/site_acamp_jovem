@@ -1,72 +1,42 @@
-import { useEffect, useState } from "react";
+import { Container, Sidebar, Title, Button, ButtonDanger, PageArea } from "./styles";
 import { useNavigate } from "react-router-dom";
-import {
-  Container,
-  Sidebar,
-  Title,
-  Button,
-  ButtonDanger,
-  MainContent
-} from "./styles";
 
-export function DashboardAdmin() {
+export function DashboardAdmin({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
-  const [user, setUser] = useState<{ name?: string } | null>(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    const adminInfo = localStorage.getItem("admin");
-    console.log("Token:", token, "Admin Info:", adminInfo);
-    if (!token || !adminInfo || adminInfo === "undefined") {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("admin");
-      navigate("/admin/login");
-      return;
-    }
-
-    try {
-      setUser(JSON.parse(adminInfo));
-    } catch (err) {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("admin");
-      navigate("/admin/login");
-    }
-  }, []);
-
-
-  function logout() {
-    localStorage.removeItem("access_token"); // <- Corrigido
-    localStorage.removeItem("admin");
+  function handleLogout() {
+    localStorage.removeItem("token");
     navigate("/admin/login");
   }
 
-
   return (
     <Container>
-      {/* MENU LATERAL */}
+
+      {/* SIDEBAR */}
       <Sidebar>
-        <Title>Admin</Title>
+        <Title>Painel Admin</Title>
 
-        <Button onClick={() => navigate("/admin/dashboard")}>
-          Inicio
+        <Button onClick={() => navigate("/admin/home")}>
+          📊 Home
+        </Button>
+        <Button onClick={() => navigate("/admin/cronograma")}>
+          🗓 Cronogramas
+        </Button>
+        <Button onClick={() => navigate("/admin/eventos")}>
+          📅 Eventos
+        </Button>
+        <Button onClick={() => navigate("/admin/config")}>
+          ⚙ Configurações
         </Button>
 
-        <Button onClick={() => navigate("/admin/content")}>
-          Editar Textos
-        </Button>
-
-        <Button onClick={() => navigate("/admin/images")}>
-          Gerenciar Imagens
-        </Button>
-
-        <ButtonDanger onClick={logout}>Sair</ButtonDanger>
+        <ButtonDanger onClick={handleLogout}>🚪 Sair</ButtonDanger>
       </Sidebar>
 
-      {/* CONTEÚDO */}
-      <MainContent>
-        <h1>Bem-vindo, {user?.name}</h1>
-        <p style={{ marginTop: "5px" }}>Área administrativa do site</p>
-      </MainContent>
+
+      <PageArea>
+        {children}
+      </PageArea>
+
     </Container>
   );
 }

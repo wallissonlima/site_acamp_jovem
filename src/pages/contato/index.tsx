@@ -69,7 +69,6 @@ export const Contato = () => {
                     </CustomForm>
                 </div>
             </Context>
-            <Footer />
         </>
     );
 };

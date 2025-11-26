@@ -106,7 +106,9 @@ export const Header: React.FC = () => {
           </Nav>
 
           <div className="icon-container">
-            <User size={25} style={{ padding: 1 }} />
+            <Link to="/admin/login">
+              <User size={25} style={{ padding: 1, color: "#9b59b6" }} />
+            </Link>
             <Link style={{ color: "#9b59b6" }} to="/carrinho">
               <ShoppingCart size={25} style={{ padding: 1 }} />
             </Link>
