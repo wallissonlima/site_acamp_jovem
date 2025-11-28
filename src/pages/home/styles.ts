@@ -58,12 +58,11 @@ export const Section = styled.section`
 /* ====== GRADE DE EVENTOS ====== */
 export const EventosGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* mantém responsivo */
-  
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 20px;
   margin: 0 auto;
   padding: 20px;
-  justify-content: center;
+  /* justify-content: center; */
 `;
 
 /* ====== CARD DE EVENTO ====== */

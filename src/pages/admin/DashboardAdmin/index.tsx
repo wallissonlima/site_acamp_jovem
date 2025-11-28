@@ -28,11 +28,8 @@ export function DashboardAdmin({ children }: { children: React.ReactNode }) {
         <Button onClick={() => navigate("/admin/config")}>
           ⚙ Configurações
         </Button>
-
         <ButtonDanger onClick={handleLogout}>🚪 Sair</ButtonDanger>
       </Sidebar>
-
-
       <PageArea>
         {children}
       </PageArea>

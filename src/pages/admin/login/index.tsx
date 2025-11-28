@@ -37,7 +37,7 @@ export const LoginAdmin = () => {
         e.preventDefault();
 
         try {
-            const login = await ax.post('/auth/login', user, { headers: uri_header });
+            const login = await ax.post('/api/auth/login', user, { headers: uri_header });
             console.log("RETORNO API:", login.data);
             if (login.data) {
                 const token = login.data.access_token;

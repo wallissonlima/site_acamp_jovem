@@ -30,7 +30,7 @@ export function EventosEditor() {
     }, []);
 
     const fetchEventos = async () => {
-        const res = await api.get("/eventos");
+        const res = await api.get("/api/eventos");
         setEventos(res.data);
     };
 
@@ -68,7 +68,7 @@ export function EventosEditor() {
                 base64: base64, // sem data: prefix
             };
 
-            await api.post('/eventos/upload', payload, {
+            await api.post('/api/eventos/upload', payload, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -86,7 +86,7 @@ export function EventosEditor() {
 
     const deletar = async (id: number) => {
         if (!confirm("Excluir evento?")) return;
-        await api.delete(`/eventos/${id}`, {
+        await api.delete(`/api/eventos/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         fetchEventos();
