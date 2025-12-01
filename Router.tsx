@@ -8,6 +8,8 @@ import { LoginAdmin } from "./src/pages/admin/login";
 import { DashboardAdmin } from "./src/pages/admin/DashboardAdmin";
 import { EventosEditor } from "./src/pages/admin/EventosEditor";
 import { HomeEditor } from "./src/pages/admin/HomeEditor";
+import { CronogramaEditor } from "./src/pages/admin/CronogramaEditor";
+import { DepoimentosEditor } from "./src/pages/admin/DepoimentosEditor";
 
 export function Router() {
   return (
@@ -35,6 +37,8 @@ export function Router() {
         <Route path="/admin/home" element={<HomeEditor />} />
         <Route path="/admin/login" element={<LoginAdmin />} />
         <Route path="/admin/eventos" element={<EventosEditor />} />
+        <Route path="/admin/cronograma" element={<CronogramaEditor />} />
+        <Route path="/admin/depoimentos" element={<DepoimentosEditor />} />
         <Route
           path="/admin/dashboard"
           element={

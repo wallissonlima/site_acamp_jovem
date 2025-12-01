@@ -9,6 +9,7 @@ export const Content = styled.main`
   width: 100%;
   overflow-x: hidden;
   padding-bottom: 40px;
+  margin-top: 10px;
   
 
   @keyframes fadeIn {

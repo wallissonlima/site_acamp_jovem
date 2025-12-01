@@ -23,9 +23,11 @@ import jovem from "../../assets/image.png";
 
 import { useEffect, useState } from "react";
 import api from "../../config/api";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
+import { FormAcampa } from "../../operaction/formAcampa";
 
 export const Home = () => {
-    const [openInscricao, setOpenInscricao] = useState(false);
+    const [openInscricao, setOpenInscricao] = useState<boolean>(false);
     const [content, setContent] = useState<Record<string, any>>({});
     const [eventos, setEventos] = useState<any[]>([]);
     const [depoimentos, setDepoimentos] = useState<any[]>([]);
@@ -107,7 +109,7 @@ export const Home = () => {
                         <p>{left?.description || "Informações adicionais sobre o evento."}</p>
                         <EventButton>
                             <CustomButton onClick={() => setOpenInscricao(true)}>
-                                {value('acampa_button', 'Inscrições')}
+                                Inscrições
                             </CustomButton>
                         </EventButton>
                     </EventInfo>
@@ -123,15 +125,51 @@ export const Home = () => {
                 {/* Depoimentos */}
                 <Section id="depoimentos">
                     <h1>{value('depoimentos_title', 'Depoimentos')}</h1>
+
                     <DepoiContent>
-                        {depoimentos.length > 0
-                            ? depoimentos.map(d => <p key={d.id}>{d.texto}</p>)
-                            : [1, 2, 3].map(i => <p key={i}>{value('depoimento_' + i, '...')}</p>)
-                        }
+                        {depoimentos?.length > 0 ? (
+                            depoimentos.map(d => (
+                                <p key={d.id}>{d.texto}</p>
+                            ))
+                        ) : (
+                            [...Array(3)].map((_, i) => (
+                                <p key={i}>{value(`depoimento_${i + 1}`, 'Depoimento padrão...')}</p>
+                            ))
+                        )}
                     </DepoiContent>
                 </Section>
+
             </Content>
             <Footer />
+
+            {/* Modal */}
+            <Modal show={openInscricao}
+                onHide={() => setOpenInscricao(false)}
+                centered
+                size="lg">
+                <ModalHeader>
+                    <h2 style={{ fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>
+                        ACAMPA JOVEM 2025 – INSCRIÇÃO
+                    </h2>
+                </ModalHeader>
+                <ModalBody >
+                    <p style={{ textAlign: "center", marginBottom: "1.5rem", color: "#1f5f5b" }}>
+                        Idade para participar: 14 a 21 anos <br />
+                        Preencha com atenção todos os campos. Essa ficha não poderá ser alterada.
+                    </p>
+                    <FormAcampa />
+                </ModalBody>
+                <ModalFooter style={{ padding: 5 }}>
+                    <CustomButton
+                        type="submit">
+                        ENVIAR INSCRIÇÃO
+                    </CustomButton>
+                    <ButtonClose type="button" onClick={() => setOpenInscricao(!openInscricao)}>
+                        Cancelar
+                    </ButtonClose>
+                </ModalFooter>
+            </Modal>
+
         </>
     );
 };

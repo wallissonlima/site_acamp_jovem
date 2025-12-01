@@ -1,21 +1,37 @@
-import { EventTimeline } from "../../components/EventTimeline"
-import { Footer } from "../../components/footer"
-import { Header } from "../../components/Header"
-import { Content } from "./styles"
+import { useEffect, useState } from "react";
+import { EventTimeline } from "../../components/EventTimeline";
+import { Footer } from "../../components/footer";
+import { Header } from "../../components/Header";
+import { Content } from "./styles";
+import api from "../../config/api";
 
 export const Cronograma = () => {
-    const milestones = [
-        { id: 1, title: "Lançar página do evento", date: "2025-11-20", note: "Página com formulário de inscrição" },
-        { id: 2, title: "Início das inscrições", date: "2026-01-15", note: "Abertura das inscrições" },
-        { id: 3, title: "Última chamada", date: "2026-07-20", note: "Preparação final" },
-        { id: 4, title: "Dia do Evento", date: "2026-07-30", note: "Grande dia!" },
-    ];
+    const [milestones, setMilestones] = useState([]);
+    const [eventDate, setEventDate] = useState("");
+
+    const loadTimeline = async () => {
+        const res = await api.get("/api/timeline");
+        setMilestones(res.data.milestones);
+        setEventDate(res.data.eventDate);
+    };
+
+    useEffect(() => { loadTimeline(); }, []);
+    useEffect(() => {
+        loadTimeline();
+    }, []);
+
+    useEffect(() => {
+        console.log("EVENTDATE =>", eventDate);
+        console.log("MILESTONES =>", milestones);
+    }, [eventDate, milestones]);
+
+
     return (
         <>
             <Header />
             <Content>
                 <EventTimeline
-                    eventDate="2026-07-30T18:00:00"
+                    eventDate={eventDate}
                     title="Contagem Regressiva para o Evento"
                     milestones={milestones}
                 />

@@ -1,65 +1,95 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 20px 16px;
-  width: 100%;
+    padding: 28px;
+    background: ${({ theme }) => theme["gray-400"] || "#f2f2f2"};
+    color: #1a1a1a; /* <<< cor principal do texto agora escura */
+    border-radius: 14px;
+    width: 100%;
+    max-width: 1000px;
+    margin: 10px auto 0;
+    box-shadow: 0 4px 22px rgba(0,0,0,0.4);
 `;
 
-export const Section = styled.section`
-  background: ${(props) => props.theme["gray-300"]};
-  border-radius: 20px;
-  padding: 40px 32px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  max-width: 100%;
-  width: 100%;
-  text-align: center;
+/* Cabeçalho */
+export const Section = styled.div`
+    margin-bottom: 30px;
 `;
 
 export const Title = styled.h2`
-  font-size: 2rem;
-  font-weight: 700;
-  color: #222;
-  margin-bottom: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #111; /* título escuro */
 `;
 
 export const Label = styled.p`
-  font-size: 1rem;
-  color: #444;
-  font-weight: 500;
-  margin-bottom: 8px;
+    opacity: .85;
+    font-size: 15px;
+    color: #222; /* label escuro */
 `;
 
+/* Contagem */
 export const Countdown = styled.h3`
-  font-size: 4rem;
-  font-weight: 800;
-  font-family: "Roboto Mono", monospace;
-  color: #111;
-  margin-bottom: 20px;
-
-  @media (max-width: 600px) {
-    font-size: 2.5rem;
-  }
+    font-size: 32px;
+    font-weight: 800;
+    margin: 14px 0 18px;
+    color: #0a0a0a; /* destaque escuro */
 `;
 
+/* Barra de progresso */
 export const ProgressBar = styled.div`
-  width: 100%;
-  height: 16px;
-  border-radius: 10px;
-  background: #e4e4e4;
-  overflow: hidden;
-  margin-bottom: 20px;
+    width: 100%;
+    background: rgba(0,0,0,0.15);
+    height: 12px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 14px;
 `;
 
 export const ProgressFill = styled.div`
-  height: 100%;
-  background: linear-gradient(90deg, #7c3aed, #06b6d4);
-  transition: width 0.3s ease;
+    height: 100%;
+    background: linear-gradient(90deg, #7c3aed, #06b6d4);
+    transition: width .6s ease;
 `;
 
+/* Data */
 export const DateText = styled.p`
-  font-size: 1.2rem;
-  color: #333;
-  font-weight: 600;
+    font-size: 15px;
+    opacity: .85;
+    color: #222;
+    margin-top: 6px;
+`;
+
+/* Timeline */
+export const MilestoneList = styled.ul`
+    list-style: none;
+    padding-left: 0;
+    margin-top: 15px;
+`;
+
+export const MilestoneItem = styled.li`
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    border-left: 4px solid #7c3aed;
+    background: rgba(0,0,0,0.06);
+    border-radius: 6px;
+
+    strong {
+        font-size: 16px;
+        color: #0d0d0d; /* título dark */
+        display: block;
+    }
+
+    small {
+        opacity: .7;
+        font-size: 13px;
+        color: #222; /* texto menor escuro */
+    }
+
+    &:hover {
+        transform: translateX(4px);
+        background: rgba(0,0,0,0.12);
+        transition: .25s;
+    }
 `;

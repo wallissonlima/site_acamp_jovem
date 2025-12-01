@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import {
     Container,
     Section,
@@ -8,6 +8,8 @@ import {
     ProgressFill,
     DateText,
     Label,
+    MilestoneList,
+    MilestoneItem,
 } from "./styles";
 
 interface Milestone {
@@ -17,63 +19,76 @@ interface Milestone {
     note?: string;
 }
 
-interface EventTimelineProps {
-    eventDate: string;
-    title?: string;
-    milestones?: Milestone[];
-}
+export function EventTimeline({ eventDate, milestones = [], title = "Evento" }) {
 
-export const EventTimeline: React.FC<EventTimelineProps> = ({
-    eventDate = "2026-07-30T00:00:00",
-    title = "Evento Principal",
-}) => {
-    const target = useRef(new Date(eventDate));
-    const [now, setNow] = useState(new Date());
+    const [remaining, setRemaining] = useState({
+        days: 0, hours: 0, minutes: 0, seconds: 0
+    });
 
     useEffect(() => {
-        const id = setInterval(() => setNow(new Date()), 1000);
-        return () => clearInterval(id);
-    }, []);
+        const update = () => {
+            const target = new Date(eventDate).getTime();
+            const now = Date.now();
+            const diff = target - now;
 
-    const totalMs = target.current.getTime() - now.getTime();
-    const absMs = Math.abs(totalMs);
-    const seconds = Math.floor((absMs / 1000) % 60);
-    const minutes = Math.floor((absMs / (1000 * 60)) % 60);
-    const hours = Math.floor((absMs / (1000 * 60 * 60)) % 24);
-    const days = Math.floor(absMs / (1000 * 60 * 60 * 24));
-    const status = totalMs > 0 ? "Faltam" : "Passou";
+            if (isNaN(target)) return console.error("❌ EVENTDATE inválido:", eventDate);
 
-    // Progresso simples (dias)
-    const start = new Date();
-    const totalWindow = target.current.getTime() - start.getTime();
-    const elapsedWindow = now.getTime() - start.getTime();
-    const progress = totalWindow <= 0 ? 100 : Math.max(0, Math.min(100, (elapsedWindow / totalWindow) * 100));
+            setRemaining({
+                days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+                hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+                minutes: Math.floor((diff / (1000 * 60)) % 60),
+                seconds: Math.floor((diff / 1000) % 60),
+            });
+        };
 
-    const formatDate = (d: Date | string) => {
-        const dd = new Date(d);
-        return dd.toLocaleDateString("pt-BR", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-        });
-    };
+        update();
+        const interval = setInterval(update, 1000);
+        return () => clearInterval(interval);
+    }, [eventDate]);
+
+
+    /** progresso visual */
+    const progress = (() => {
+        const total = new Date(eventDate).getTime() - Date.now();
+        if (total <= 0) return 100;
+        const start = Date.now();
+        const duration = new Date(eventDate).getTime() - start;
+        return Math.min(100, Math.max(0, (1 - total / duration) * 100));
+    })();
+
 
     return (
         <Container>
             <Section>
                 <Title>{title}</Title>
-                <Label>Contagem regressiva (tempo real)</Label>
+
+                <Label>Contagem regressiva</Label>
 
                 <Countdown>
-                    {status} {days}d {hours}h {minutes}m {seconds}s
+                    Faltam {remaining.days}d {remaining.hours}h {remaining.minutes}m {remaining.seconds}s
                 </Countdown>
 
                 <ProgressBar>
                     <ProgressFill style={{ width: `${progress}%` }} />
                 </ProgressBar>
 
-                <DateText>Data do evento: {formatDate(eventDate)}</DateText>
+                <DateText>Data do evento: {new Date(eventDate).toLocaleDateString("pt-BR")}</DateText>
             </Section>
+
+            {milestones.length > 0 && (
+                <Section>
+                    <Label>📍 Linha do Tempo</Label>
+                    <MilestoneList>
+                        {milestones.map(m => (
+                            <MilestoneItem key={m.id}>
+                                <strong>{m.title}</strong> — {new Date(m.date).toLocaleDateString("pt-BR")}
+                                <br />
+                                <small>{m.note}</small>
+                            </MilestoneItem>
+                        ))}
+                    </MilestoneList>
+                </Section>
+            )}
         </Container>
     );
-};
+}

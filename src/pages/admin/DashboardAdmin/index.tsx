@@ -1,3 +1,4 @@
+import { SignOut } from "phosphor-react";
 import { Container, Sidebar, Title, Button, ButtonDanger, PageArea } from "./styles";
 import { useNavigate } from "react-router-dom";
 
@@ -17,18 +18,21 @@ export function DashboardAdmin({ children }: { children: React.ReactNode }) {
         <Title>Painel Admin</Title>
 
         <Button onClick={() => navigate("/admin/home")}>
-          📊 Home
+          Home
         </Button>
         <Button onClick={() => navigate("/admin/cronograma")}>
-          🗓 Cronogramas
+          Cronogramas
+        </Button>
+        <Button onClick={() => navigate("/admin/depoimentos")}>
+          Depoimentos
         </Button>
         <Button onClick={() => navigate("/admin/eventos")}>
-          📅 Eventos
+          Eventos
         </Button>
         <Button onClick={() => navigate("/admin/config")}>
-          ⚙ Configurações
+          Configurações
         </Button>
-        <ButtonDanger onClick={handleLogout}>🚪 Sair</ButtonDanger>
+        <ButtonDanger onClick={handleLogout}><SignOut size={15} /> Sair</ButtonDanger>
       </Sidebar>
       <PageArea>
         {children}
