@@ -10,6 +10,7 @@ import {
     EventCard,
     EventContent,
     EventInfo,
+    EventInfo2,
     EventosGrid,
     Section,
 } from "./styles";
@@ -102,7 +103,7 @@ export const Home = () => {
 
                 {/* Seção Acampa Jovem */}
                 <EventContent id="acampajovem">
-                    {/* BLOCO ESQUERDA */}
+                  
                     <img src={left?.value ? `data:image/jpeg;base64,${left.value}` : jovem} alt={titleValue('acampa_image_left')} />
                     <EventInfo>
                         <h2>{left?.title || "Acampa Jovem 2026"}</h2>
@@ -114,12 +115,11 @@ export const Home = () => {
                         </EventButton>
                     </EventInfo>
 
-                    {/* BLOCO DIREITA */}
                     <img src={right?.value ? `data:image/jpeg;base64,${right.value}` : acampa} alt={titleValue('acampa_image_right')} />
-                    <EventInfo>
+                    <EventInfo2>
                         <h2>{right?.title || "Uma experiência que transforma vidas!"}</h2>
                         <p>{right?.description || "Inspirado por Deus..."}</p>
-                    </EventInfo>
+                    </EventInfo2>
                 </EventContent>
 
                 {/* Depoimentos */}

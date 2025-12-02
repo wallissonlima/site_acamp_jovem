@@ -189,7 +189,18 @@ export const EventInfo = styled.article`
   justify-content: center;
   align-items: center;
   text-align: center;
+  padding: 10px; margin-top: -2%;
+`;
+
+/* ====== INFO DO EVENTO 2====== */
+export const EventInfo2 = styled.article`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   padding: 10px;
+  margin-top: -37%;
 `;
 
 /* ====== DEPOIMENTOS (SEÇÃO NOVA) ====== */
