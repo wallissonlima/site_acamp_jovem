@@ -1,37 +1,142 @@
-import React from "react";
-import { CustomDiv, CustomForm } from "./styles"; // 👈 importa o estilo que você já tem
+import React, { useState, forwardRef } from "react";
+import axios from "axios";
+import { CustomDiv, CustomForm } from "./styles";
+import { toast } from "react-toastify";
 
-export const FormAcampa: React.FC = () => {
+export const FormAcampa = forwardRef(({ onSuccess }, ref) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    dataNascimento: "",
+    telefone: "",
+    nomeCredencial: "",
+    tamanhoCamiseta: "",
+    nomeResponsavel: "",
+    telefoneResponsavel: "",
+    autorizacaoImagem: "",
+    alergiaRestricao: "",
+    descricao: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Converte dataNascimento para Date (ou null)
+    const payload = {
+      ...formData,
+      dataNascimento: formData.dataNascimento
+        ? new Date(formData.dataNascimento.split("/").reverse().join("-"))
+        : null,
+      telefone: formData.telefone || null,
+      nomeResponsavel: formData.nomeResponsavel || null,
+      telefoneResponsavel: formData.telefoneResponsavel || null,
+      tamanhoCamiseta: formData.tamanhoCamiseta || null,
+      autorizacaoImagem: formData.autorizacaoImagem || null,
+      alergiaRestricao: formData.alergiaRestricao || null,
+      descricao: formData.descricao || null,
+    };
+
+    try {
+      await axios.post("http://localhost:3000/api/formulario", payload);
+      toast("Inscrição enviada com sucesso!");
+      if (onSuccess) onSuccess();
+      // Resetar form
+      setFormData({
+        name: "",
+        email: "",
+        dataNascimento: "",
+        telefone: "",
+        nomeCredencial: "",
+        tamanhoCamiseta: "",
+        nomeResponsavel: "",
+        telefoneResponsavel: "",
+        autorizacaoImagem: "",
+        alergiaRestricao: "",
+        descricao: "",
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao enviar inscrição. Verifique os dados e tente novamente.");
+    }
+  };
+
   return (
-    <CustomForm>
+    <CustomForm ref={ref} onSubmit={handleSubmit}>
       <CustomDiv>
         <div>
-          <input className="inputEmail" type="email" required />
+          <input
+            name="email"
+            className="inputEmail"
+            type="email"
+            required
+            value={formData.email}
+            onChange={handleChange}
+          />
           <label className="emailLabel">Email</label>
         </div>
 
         <div>
-          <input className="inputName" type="text" required style={{ textTransform: "uppercase" }} />
+          <input
+            name="name"
+            className="inputName"
+            type="text"
+            required
+            style={{ textTransform: "uppercase" }}
+            value={formData.name}
+            onChange={handleChange}
+          />
           <label className="nameLabel">Nome Completo</label>
         </div>
 
         <div>
-          <input className="inputName" type="text" required placeholder="DD/MM/AAAA" />
+          <input
+            name="dataNascimento"
+            className="inputName"
+            type="date"
+            required
+            placeholder="DD/MM/AAAA"
+            value={formData.dataNascimento}
+            onChange={handleChange}
+          />
           <label className="nameLabel">Data de Nascimento</label>
         </div>
 
         <div>
-          <input className="inputEmail" type="tel" required />
+          <input
+            name="telefone"
+            className="inputEmail"
+            type="tel"
+            value={formData.telefone}
+            onChange={handleChange}
+          />
           <label className="emailLabel">Telefone com WhatsApp</label>
         </div>
 
         <div>
-          <input className="inputName" type="text" required style={{ textTransform: "uppercase" }} />
+          <input
+            name="nomeCredencial"
+            className="inputName"
+            type="text"
+            required
+            style={{ textTransform: "uppercase" }}
+            value={formData.nomeCredencial}
+            onChange={handleChange}
+          />
           <label className="nameLabel">Nome para Credencial</label>
         </div>
 
         <div>
-          <select className="inputEmail" required>
+          <select
+            name="tamanhoCamiseta"
+            className="inputEmail"
+            value={formData.tamanhoCamiseta}
+            onChange={handleChange}
+          >
             <option value="">Selecione o tamanho</option>
             <option>P</option>
             <option>M</option>
@@ -48,17 +153,34 @@ export const FormAcampa: React.FC = () => {
         </div>
 
         <div>
-          <input className="inputName" type="text" required />
+          <input
+            name="nomeResponsavel"
+            className="inputName"
+            type="text"
+            value={formData.nomeResponsavel}
+            onChange={handleChange}
+          />
           <label className="nameLabel">Nome do Responsável</label>
         </div>
 
         <div>
-          <input className="inputEmail" type="tel" required />
+          <input
+            name="telefoneResponsavel"
+            className="inputEmail"
+            type="tel"
+            value={formData.telefoneResponsavel}
+            onChange={handleChange}
+          />
           <label className="emailLabel">Telefone do Responsável</label>
         </div>
 
         <div>
-          <select className="inputEmail" required>
+          <select
+            name="autorizacaoImagem"
+            className="inputEmail"
+            value={formData.autorizacaoImagem}
+            onChange={handleChange}
+          >
             <option value="">Selecione</option>
             <option>Sim</option>
             <option>Não</option>
@@ -67,7 +189,12 @@ export const FormAcampa: React.FC = () => {
         </div>
 
         <div>
-          <select className="inputEmail" required>
+          <select
+            name="alergiaRestricao"
+            className="inputEmail"
+            value={formData.alergiaRestricao}
+            onChange={handleChange}
+          >
             <option value="">Selecione</option>
             <option>Sim</option>
             <option>Não</option>
@@ -77,12 +204,18 @@ export const FormAcampa: React.FC = () => {
 
         <div style={{ gridColumn: "1 / span 2" }}>
           <textarea
+            name="descricao"
             className="inputDescricao"
             placeholder="Descreva aqui se tiver alguma restrição ou alergia..."
-          ></textarea>
+            value={formData.descricao}
+            onChange={handleChange}
+          />
           <label className="descricaoLabel">Descrição</label>
         </div>
       </CustomDiv>
+
+      {/* botão escondido para submit via modal */}
+      <button type="submit" style={{ display: "none" }}></button>
     </CustomForm>
   );
-};
+});

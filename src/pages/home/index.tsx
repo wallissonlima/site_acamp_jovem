@@ -15,20 +15,17 @@ import {
     Section,
 } from "./styles";
 
-import logo from "../../assets/logo.jpeg";
-import deus from "../../assets/deus.png";
-import virt from "../../assets/virtuosas.png";
-import int from "../../assets/intimidade.png";
 import acampa from "../../assets/test.png";
 import jovem from "../../assets/image.png";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import api from "../../config/api";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
 import { FormAcampa } from "../../operaction/formAcampa";
 
 export const Home = () => {
     const [openInscricao, setOpenInscricao] = useState<boolean>(false);
+    const formRef = useRef(null);
     const [content, setContent] = useState<Record<string, any>>({});
     const [eventos, setEventos] = useState<any[]>([]);
     const [depoimentos, setDepoimentos] = useState<any[]>([]);
@@ -103,7 +100,7 @@ export const Home = () => {
 
                 {/* Seção Acampa Jovem */}
                 <EventContent id="acampajovem">
-                  
+
                     <img src={left?.value ? `data:image/jpeg;base64,${left.value}` : jovem} alt={titleValue('acampa_image_left')} />
                     <EventInfo>
                         <h2>{left?.title || "Acampa Jovem 2026"}</h2>
@@ -157,11 +154,16 @@ export const Home = () => {
                         Idade para participar: 14 a 21 anos <br />
                         Preencha com atenção todos os campos. Essa ficha não poderá ser alterada.
                     </p>
-                    <FormAcampa />
+                    <FormAcampa ref={formRef} onSuccess={() => setOpenInscricao(false)} />
                 </ModalBody>
                 <ModalFooter style={{ padding: 5 }}>
                     <CustomButton
-                        type="submit">
+                        type="submit"
+                        onClick={() => {
+                            if (formRef.current) {
+                                formRef.current.requestSubmit(); // dispara o submit do form
+                            }
+                        }}>
                         ENVIAR INSCRIÇÃO
                     </CustomButton>
                     <ButtonClose type="button" onClick={() => setOpenInscricao(!openInscricao)}>

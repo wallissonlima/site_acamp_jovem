@@ -69,8 +69,20 @@ export const ButtonAdd = styled.button`
 `;
 
 export const ButtonSave = styled(ButtonAdd)`
-    background: #7c3aed;
-    margin-top: 15px;
+    background: transparent;
+    border: 2px solid #6c5ce7;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-weight: bold;
+    transition: .25s;
+
+    &:hover {
+        background:#6c5ce7;
+        color:#fff;
+    }
 `;
 
 export const ButtonDelete = styled.button`
@@ -83,26 +95,28 @@ export const ButtonDelete = styled.button`
 
 /* 🔥 TABELA padrão do outro estilo */
 export const Table = styled.table`
-    width:100%;
-    margin-top: 20px;
-    background:#2c2c54;
-    color:#fff;
-    border-radius:12px;
-    overflow:hidden;
-    box-shadow:0 3px 10px rgba(0,0,0,0.07);
+  width:100%;
+  background:#ffffff12;
+  border: 1px solid #ffffff21;
+  border-radius:14px;
+  overflow:hidden;
+  backdrop-filter: blur(6px);
+  box-shadow:0 3px 10px #00000055;
+  margin-top: 15px;
 
-    th{
-        background:#474787;
-        padding:14px;
-    }
-
-    td{
-        padding:14px;
-    }
-
-    tr:hover{
-        background:#706fd3;
-    }
+  th{
+    background:#00000025;
+    padding:14px;
+    font-weight:700;
+  }
+  
+  td{
+    padding:14px;
+  }
+  
+  tr:hover{
+    background:#ffffff12;
+  }
 `;
 
 export const Img = styled.img`

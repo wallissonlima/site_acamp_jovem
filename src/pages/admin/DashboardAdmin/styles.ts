@@ -47,13 +47,13 @@ export const Title = styled.h2`
 `;
 
 /* BOTÕES DO PAINEL — PREMIUM */
-export const Button = styled.button`
+export const Button = styled.button<{ active?: boolean }>`
   width: 100%;
   padding: 15px 16px;
   border-radius: 12px;
   border: none;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: ${({ active }) => (active ? "rgba(0, 200, 255, 0.25)" : "rgba(255,255,255,0.05)")};
+  border: 1px solid ${({ active }) => (active ? "rgba(0,200,255,0.5)" : "rgba(255,255,255,0.12)")};
   backdrop-filter: blur(12px);
   color: #fff;
   font-size: 15px;
@@ -82,6 +82,7 @@ export const Button = styled.button`
   &:hover:before { left: 100%; }
   &:hover { transform: translateX(6px) scale(1.01); }
 `;
+
 
 /* BOTÃO PERIGO MODERNO — RED NEON */
 export const ButtonDanger = styled(Button)`
