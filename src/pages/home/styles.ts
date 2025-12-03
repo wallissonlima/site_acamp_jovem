@@ -9,7 +9,6 @@ export const Content = styled.main`
   width: 100%;
   overflow-x: hidden;
   padding-bottom: 40px;
-  
 
   @keyframes fadeIn {
     from {
@@ -50,9 +49,9 @@ export const Section = styled.section`
   width: 100%;
   padding: 20px;
 
-.nav-link {
-  cursor: pointer !important;
-}
+  .nav-link {
+    cursor: pointer !important;
+  }
 `;
 
 /* ====== GRADE DE EVENTOS ====== */
@@ -62,7 +61,6 @@ export const EventosGrid = styled.div`
   gap: 20px;
   margin: 0 auto;
   padding: 20px;
-  /* justify-content: center; */
 `;
 
 /* ====== CARD DE EVENTO ====== */
@@ -82,8 +80,8 @@ export const EventCard = styled.div<{ selected?: boolean }>`
 
   img {
     width: 100%;
-    height: 200px;        /* tamanho fixo do card */
-    object-fit: cover;    /* corta sem distorcer */
+    height: 200px;
+    object-fit: cover;
     border-radius: 10px;
     margin-bottom: 10px;
   }
@@ -95,7 +93,7 @@ export const EventCard = styled.div<{ selected?: boolean }>`
   }
 `;
 
-/* ====== CONTEÚDO DO EVENTO (ex: Acampa Jovem) ====== */
+/* ====== CONTEÚDO DO EVENTO ====== */
 export const EventContent = styled.section`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -115,10 +113,10 @@ export const EventContent = styled.section`
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
-  }
 
-  img:hover {
-    transform: scale(1.02);
+    &:hover {
+      transform: scale(1.02);
+    }
   }
 
   h2 {
@@ -144,7 +142,11 @@ export const EventButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 15rem;
+  margin-top: 3rem;
+
+  @media (max-width: 768px) {
+    margin-top: 2rem;
+  }
 `;
 
 export const CustomButton = styled.button`
@@ -186,24 +188,23 @@ export const ButtonClose = styled.button`
 export const EventInfo = styled.article`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 10px; margin-top: -2%;
+  padding: 20px;
+  margin: 2rem 0;
 `;
 
-/* ====== INFO DO EVENTO 2====== */
+/* ====== INFO DO EVENTO 2 - MESMO PADRÃO ====== */
 export const EventInfo2 = styled.article`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 10px;
-  margin-top: -37%;
+  padding: 20px;
+  margin: 2rem 0;
 `;
 
-/* ====== DEPOIMENTOS (SEÇÃO NOVA) ====== */
+/* ====== DEPOIMENTOS ====== */
 export const DepoiContent = styled.section`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -218,3 +219,57 @@ export const DepoiContent = styled.section`
     text-shadow: 0 0 10px rgba(33, 75, 73, 0.2);
   }
 `;
+
+
+/* ===== Modal===== */
+export const ModalDialogResponsive = styled.div`
+  .modal-content {
+    width: 95vw !important;          /* quase tela inteira no celular */
+    max-width: 650px !important;     /* limite confortável em desktop */
+    margin: 0 auto;
+    border-radius: 14px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 10px;
+  }
+
+  @media (max-width: 480px) {
+    .modal-content {
+      padding: 6px;
+    }
+  }
+`;
+
+/* ===== Título Responsivo ===== */
+export const ModalTitle = styled.h2`
+  font-weight: bold;
+  font-family: "Arial", sans-serif;
+  font-size: 1.6rem;
+  text-align: center;
+
+  @media (max-width: 480px) {
+    font-size: 1.2rem;
+  }
+`;
+
+/* ===== Texto descritivo ===== */
+export const ModalInfo = styled.p`
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #1f5f5b;
+  font-size: 1rem;
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+  }
+`;
+
+/* ===== Footer adaptável e organizado ===== */
+export const ModalFooterContent = styled.div`
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;        /* quebra linha no celular */
+  justify-content: flex-end; /* centraliza botões na tela pequena */::
+`;
+

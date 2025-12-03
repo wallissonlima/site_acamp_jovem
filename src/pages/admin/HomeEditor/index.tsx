@@ -16,6 +16,7 @@ import {
     Img
 } from "./styles";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 type ContentMap = Record<string, { id?: number; value?: string }>;
 
@@ -109,10 +110,10 @@ export const HomeEditor = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            alert("Conteúdo salvo com sucesso!");
+            toast("Conteúdo salvo com sucesso!");
             loadContent();
         } catch {
-            alert("Erro ao salvar conteúdo");
+            toast.error("Erro ao salvar conteúdo");
         } finally {
             setLoading(false);
         }

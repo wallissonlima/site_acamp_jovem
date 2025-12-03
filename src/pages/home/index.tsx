@@ -12,6 +12,10 @@ import {
     EventInfo,
     EventInfo2,
     EventosGrid,
+    ModalDialogResponsive,
+    ModalFooterContent,
+    ModalInfo,
+    ModalTitle,
     Section,
 } from "./styles";
 
@@ -140,36 +144,49 @@ export const Home = () => {
             <Footer />
 
             {/* Modal */}
-            <Modal show={openInscricao}
+            <Modal
+                show={openInscricao}
                 onHide={() => setOpenInscricao(false)}
                 centered
-                size="lg">
-                <ModalHeader>
-                    <h2 style={{ fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>
-                        ACAMPA JOVEM 2025 – INSCRIÇÃO
-                    </h2>
-                </ModalHeader>
-                <ModalBody >
-                    <p style={{ textAlign: "center", marginBottom: "1.5rem", color: "#1f5f5b" }}>
-                        Idade para participar: 14 a 21 anos <br />
-                        Preencha com atenção todos os campos. Essa ficha não poderá ser alterada.
-                    </p>
-                    <FormAcampa ref={formRef} onSuccess={() => setOpenInscricao(false)} />
-                </ModalBody>
-                <ModalFooter style={{ padding: 5 }}>
-                    <CustomButton
-                        type="submit"
-                        onClick={() => {
-                            if (formRef.current) {
-                                formRef.current.requestSubmit(); // dispara o submit do form
-                            }
-                        }}>
-                        ENVIAR INSCRIÇÃO
-                    </CustomButton>
-                    <ButtonClose type="button" onClick={() => setOpenInscricao(!openInscricao)}>
-                        Cancelar
-                    </ButtonClose>
-                </ModalFooter>
+                size="lg"
+                dialogClassName="modal-responsive-acampa"
+            >
+                <ModalDialogResponsive>
+                    <ModalHeader closeButton>
+                        <ModalTitle>
+                            ACAMPA JOVEM 2025 – INSCRIÇÃO
+                        </ModalTitle>
+                    </ModalHeader>
+
+                    <ModalBody>
+                        <ModalInfo>
+                            Idade para participar: 14 a 21 anos <br />
+                            Preencha com atenção todos os campos. Essa ficha não poderá ser alterada.
+                        </ModalInfo>
+
+                        <FormAcampa
+                            ref={formRef}
+                            onSuccess={() => setOpenInscricao(false)}
+                        />
+                    </ModalBody>
+
+                    <ModalFooterContent>
+                        <CustomButton
+                            type="submit"
+                            onClick={() => {
+                                if (formRef.current) {
+                                    formRef.current.requestSubmit();
+                                }
+                            }}
+                        >
+                            ENVIAR INSCRIÇÃO
+                        </CustomButton>
+
+                        <ButtonClose type="button" onClick={() => setOpenInscricao(false)}>
+                            Cancelar
+                        </ButtonClose>
+                    </ModalFooterContent>
+                </ModalDialogResponsive>
             </Modal>
 
         </>
