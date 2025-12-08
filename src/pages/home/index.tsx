@@ -12,10 +12,13 @@ import {
     EventInfo,
     EventInfo2,
     EventosGrid,
-    ModalDialogResponsive,
-    ModalFooterContent,
-    ModalInfo,
-    ModalTitle,
+    ModernButton,
+    ModernCancelButton,
+    ModernFooter,
+    ModernInfo,
+    ModernModal,
+    ModernTitle,
+    PaymentCloseButton,
     Section,
 } from "./styles";
 
@@ -26,6 +29,7 @@ import { useEffect, useRef, useState } from "react";
 import api from "../../config/api";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
 import { FormAcampa } from "../../operaction/formAcampa";
+import { MercadoPagoButton } from "../admin/ButtonPago";
 
 export const Home = () => {
     const [openInscricao, setOpenInscricao] = useState<boolean>(false);
@@ -33,6 +37,8 @@ export const Home = () => {
     const [content, setContent] = useState<Record<string, any>>({});
     const [eventos, setEventos] = useState<any[]>([]);
     const [depoimentos, setDepoimentos] = useState<any[]>([]);
+    const [showPayment, setShowPayment] = useState(false);
+
 
     useEffect(() => {
         // 🔹 Carrega conteúdo da página Home
@@ -69,6 +75,9 @@ export const Home = () => {
     // acessa blocos da Acampa
     const left = content["acampa_image_left"];
     const right = content["acampa_image_right"];
+
+
+
 
     return (
         <>
@@ -149,29 +158,25 @@ export const Home = () => {
                 onHide={() => setOpenInscricao(false)}
                 centered
                 size="lg"
-                dialogClassName="modal-responsive-acampa"
             >
-                <ModalDialogResponsive>
-                    <ModalHeader closeButton>
-                        <ModalTitle>
-                            ACAMPA JOVEM 2025 – INSCRIÇÃO
-                        </ModalTitle>
-                    </ModalHeader>
+                <ModernModal>
+                    <ModernTitle>ACAMPA JOVEM 2025 – INSCRIÇÃO</ModernTitle>
 
-                    <ModalBody>
-                        <ModalInfo>
-                            Idade para participar: 14 a 21 anos <br />
-                            Preencha com atenção todos os campos. Essa ficha não poderá ser alterada.
-                        </ModalInfo>
+                    <ModernInfo>
+                        Idade para participar: 14 a 21 anos <br />
+                        Preencha com atenção todos os campos. Essa ficha não poderá ser alterada.
+                    </ModernInfo>
 
-                        <FormAcampa
-                            ref={formRef}
-                            onSuccess={() => setOpenInscricao(false)}
-                        />
-                    </ModalBody>
+                    <FormAcampa
+                        ref={formRef}
+                        onSuccess={() => {
+                            setOpenInscricao(false);
+                            setShowPayment(true);
+                        }}
+                    />
 
-                    <ModalFooterContent>
-                        <CustomButton
+                    <ModernFooter>
+                        <ModernButton
                             type="submit"
                             onClick={() => {
                                 if (formRef.current) {
@@ -180,14 +185,37 @@ export const Home = () => {
                             }}
                         >
                             ENVIAR INSCRIÇÃO
-                        </CustomButton>
+                        </ModernButton>
 
-                        <ButtonClose type="button" onClick={() => setOpenInscricao(false)}>
+                        <ModernCancelButton onClick={() => setOpenInscricao(false)}>
                             Cancelar
-                        </ButtonClose>
-                    </ModalFooterContent>
-                </ModalDialogResponsive>
+                        </ModernCancelButton>
+                    </ModernFooter>
+                </ModernModal>
             </Modal>
+
+            <Modal
+                show={showPayment}
+                onHide={() => setShowPayment(false)}
+                centered
+                size="md"
+            >
+                <ModernModal style={{ textAlign: "center" }}>
+                    <ModernTitle>Pagamento da Inscrição</ModernTitle>
+
+                    <ModernInfo>
+                        Finalize o pagamento para confirmar sua vaga.
+                    </ModernInfo>
+
+                    <MercadoPagoButton />
+
+                    <PaymentCloseButton onClick={() => setShowPayment(false)}>
+                        Fechar
+                    </PaymentCloseButton>
+                </ModernModal>
+            </Modal>
+
+
 
         </>
     );

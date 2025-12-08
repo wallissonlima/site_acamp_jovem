@@ -5,11 +5,11 @@ export const Context = styled.nav`
   flex-direction: column;
   justify-content: center;
   padding: 2px; 
-  background: ${(props) => props.theme["gray-300"]};
+  background: ${(props) => props.theme["gray-400"]};
   `;
 
 export const FooterCustom = styled.footer`
-  padding: 20px;
+  padding: 10px;
   text-align: center;
   border-top:  1px solid rgba(255, 255, 255, 0.15);
 
@@ -39,5 +39,5 @@ export const FooterText = styled.div`
  padding: 0px 2px;
  font-size: small;
 
- background-color:${(props) => props.theme["gray-300"]} ;
+ background-color:${(props) => props.theme["gray-400"]} ;
 `;

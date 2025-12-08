@@ -222,54 +222,82 @@ export const DepoiContent = styled.section`
 
 
 /* ===== Modal===== */
-export const ModalDialogResponsive = styled.div`
-  .modal-content {
-    width: 95vw !important;          /* quase tela inteira no celular */
-    max-width: 650px !important;     /* limite confortável em desktop */
-    margin: 0 auto;
-    border-radius: 14px;
-    max-height: 90vh;
-    overflow-y: auto;
-    padding: 10px;
-  }
+export const ModernModal = styled.div`
+  padding: 28px;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.25s ease;
 
-  @media (max-width: 480px) {
-    .modal-content {
-      padding: 6px;
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
     }
   }
 `;
 
-/* ===== Título Responsivo ===== */
-export const ModalTitle = styled.h2`
-  font-weight: bold;
-  font-family: "Arial", sans-serif;
+export const ModernTitle = styled.h2`
   font-size: 1.6rem;
+  font-weight: 800;
+  color: #1e1e36;
   text-align: center;
-
-  @media (max-width: 480px) {
-    font-size: 1.2rem;
-  }
+  margin-bottom: 12px;
 `;
 
-/* ===== Texto descritivo ===== */
-export const ModalInfo = styled.p`
+export const ModernInfo = styled.p`
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 20px;
   text-align: center;
-  margin-bottom: 1.5rem;
-  color: #1f5f5b;
-  font-size: 1rem;
-
-  @media (max-width: 480px) {
-    font-size: 0.9rem;
-  }
 `;
 
-/* ===== Footer adaptável e organizado ===== */
-export const ModalFooterContent = styled.div`
-  padding: 10px;
+export const ModernFooter = styled.div`
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;        /* quebra linha no celular */
-  justify-content: flex-end; /* centraliza botões na tela pequena */::
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
 `;
+
+export const ModernButton = styled.button`
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+  background: #4f46e5;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    background: #4338ca;
+  }
+`;
+
+export const ModernCancelButton = styled(ModernButton)`
+  background: #e11d48;
+
+  &:hover {
+    background: #be123c;
+  }
+`;
+
+export const PaymentCloseButton = styled.button`
+  margin-top: 20px;
+  background: #475569;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+  transition: 0.2s;
+
+  &:hover {
+    background: #334155;
+  }
+`;
+
 

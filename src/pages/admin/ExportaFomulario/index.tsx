@@ -65,8 +65,6 @@ export const ExportaFormulario = () => {
             toast.error("Erro ao excluir todos os formulários");
         }
     };
-
-
     useEffect(() => {
         fetchFormulario();
     }, []);
@@ -103,12 +101,14 @@ export const ExportaFormulario = () => {
                             <tr key={e.id}>
                                 <td>{e.name}</td>
                                 <td>{e.email}</td>
-                                <td>{e.dataNascimento}</td>
-                                <td>{e.telefone}</td>
+                                <td>{new Date(e.dataNascimento).toLocaleDateString("pt-BR")}</td>
+                                <td>
+                                    {e.telefone
+                                        ?.replace(/\D/g, "")             // Remove não números
+                                        .replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3")
+                                    }
+                                </td>
                                 <td>{e.nomeCredencial}</td>
-
-
-
                             </tr>
                         ))}
                     </tbody>
