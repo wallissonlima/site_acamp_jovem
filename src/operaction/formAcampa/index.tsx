@@ -37,26 +37,37 @@ export const FormAcampa = forwardRef(({ onSuccess }, ref) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Converte dataNascimento para Date (ou null)
-    const payload = {
-      ...formData,
-      dataNascimento: formData.dataNascimento
-        ? new Date(formData.dataNascimento.split("/").reverse().join("-"))
-        : null,
-      telefone: formData.telefone || null,
-      nomeResponsavel: formData.nomeResponsavel || null,
-      telefoneResponsavel: formData.telefoneResponsavel || null,
-      tamanhoCamiseta: formData.tamanhoCamiseta || null,
-      autorizacaoImagem: formData.autorizacaoImagem || null,
-      alergiaRestricao: formData.alergiaRestricao || null,
-      descricao: formData.descricao || null,
-    };
-
     try {
+      // --- 1) Verifica CPF antes de enviar ---
+      const check = await axios.get(`http://localhost:3000/api/formulario/exists-cpf/${formData.cpf}`);
+
+      if (check.data.exists) {
+        toast.error("Este CPF já está cadastrado!");
+        return; // ❌ cancela envio
+      }
+
+      // --- 2) Monta o payload ---
+      const payload = {
+        ...formData,
+        dataNascimento: formData.dataNascimento
+          ? new Date(formData.dataNascimento.split("/").reverse().join("-"))
+          : null,
+        telefone: formData.telefone || null,
+        nomeResponsavel: formData.nomeResponsavel || null,
+        telefoneResponsavel: formData.telefoneResponsavel || null,
+        tamanhoCamiseta: formData.tamanhoCamiseta || null,
+        autorizacaoImagem: formData.autorizacaoImagem || null,
+        alergiaRestricao: formData.alergiaRestricao || null,
+        descricao: formData.descricao || null,
+      };
+
+      // --- 3) Envia ---
       await axios.post("http://localhost:3000/api/formulario", payload);
-      toast("Inscrição enviada com sucesso!");
+
+      toast.success("Inscrição enviada com sucesso!");
       if (onSuccess) onSuccess();
-      // Resetar form
+
+      // --- 4) Resetar form ---
       setFormData({
         name: "",
         email: "",
@@ -71,11 +82,13 @@ export const FormAcampa = forwardRef(({ onSuccess }, ref) => {
         alergiaRestricao: "",
         descricao: "",
       });
+
     } catch (err) {
       console.error(err);
       alert("Erro ao enviar inscrição. Verifique os dados e tente novamente.");
     }
   };
+
 
   return (
     <CustomForm ref={ref} onSubmit={handleSubmit}>
