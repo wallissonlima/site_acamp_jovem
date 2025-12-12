@@ -30,6 +30,7 @@ import api from "../../config/api";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
 import { FormAcampa } from "../../operaction/formAcampa";
 import { MercadoPagoButton } from "../admin/ButtonPago";
+import { EventTimeline } from "../../components/EventTimeline";
 
 export const Home = () => {
     const [openInscricao, setOpenInscricao] = useState<boolean>(false);
@@ -38,6 +39,8 @@ export const Home = () => {
     const [eventos, setEventos] = useState<any[]>([]);
     const [depoimentos, setDepoimentos] = useState<any[]>([]);
     const [showPayment, setShowPayment] = useState(false);
+    const [eventDate, setEventDate] = useState("");
+    const [milestones, setMilestones] = useState([]);
 
 
     useEffect(() => {
@@ -76,14 +79,24 @@ export const Home = () => {
     const left = content["acampa_image_left"];
     const right = content["acampa_image_right"];
 
-
-
+    const loadTimeline = async () => {
+        const res = await api.get("/api/timeline");
+        setMilestones(res.data.milestones);
+        setEventDate(res.data.eventDate);
+    };
+    useEffect(() => {
+        loadTimeline();
+    }, []);
 
     return (
         <>
             <Header />
             <Content>
                 <CustomCarousel />
+                <EventTimeline
+                    eventDate={eventDate}
+                    showOnlyDaysAndProgress={true}
+                />
 
                 {/* Seção Eventos */}
                 <Section id="eventos">
@@ -98,6 +111,7 @@ export const Home = () => {
                                         alt={e.descricao}
                                     />
                                     <h3>{e.descricao}</h3>
+                                    {/* <h5>{new Date(e.dataInicio).toLocaleDateString("pt-BR")} → {new Date(e.dataFim).toLocaleDateString("pt-BR")}</h5> */}
                                 </EventCard>
                             ))
                         ) : (
@@ -120,7 +134,7 @@ export const Home = () => {
                         <p>{left?.description || "Informações adicionais sobre o evento."}</p>
                         <EventButton>
                             <CustomButton onClick={() => setOpenInscricao(true)}>
-                                Inscrições
+                                Inscrições participantes
                             </CustomButton>
                         </EventButton>
                     </EventInfo>
@@ -129,6 +143,11 @@ export const Home = () => {
                     <EventInfo2>
                         <h2>{right?.title || "Uma experiência que transforma vidas!"}</h2>
                         <p>{right?.description || "Inspirado por Deus..."}</p>
+                        <EventButton>
+                            <CustomButton onClick={() => setOpenInscricao(true)}>
+                                Inscrições Servos
+                            </CustomButton>
+                        </EventButton>
                     </EventInfo2>
                 </EventContent>
 

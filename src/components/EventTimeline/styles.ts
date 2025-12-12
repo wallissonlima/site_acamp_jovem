@@ -6,7 +6,7 @@ export const Container = styled.div`
     color: #1a1a1a; /* <<< cor principal do texto agora escura */
     border-radius: 14px;
     width: 100%;
-    max-width: 1000px;
+    max-width: 1400px;
     margin: 10px auto 0;
     box-shadow: 0 4px 22px rgba(0,0,0,0.4);
 `;
@@ -40,7 +40,7 @@ export const Countdown = styled.h3`
 /* Barra de progresso */
 export const ProgressBar = styled.div`
     width: 100%;
-    background: rgba(0,0,0,0.15);
+    background: rgba(7, 7, 7, 0.15);
     height: 12px;
     border-radius: 8px;
     overflow: hidden;
@@ -49,7 +49,7 @@ export const ProgressBar = styled.div`
 
 export const ProgressFill = styled.div`
     height: 100%;
-    background: linear-gradient(90deg, #7c3aed, #06b6d4);
+    background: linear-gradient(90deg, #935cf1ff, #2933beff);
     transition: width .6s ease;
 `;
 

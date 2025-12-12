@@ -36,7 +36,10 @@ export const Cronograma = () => {
                     milestones={milestones}
                 />
             </Content>
-            <Footer />
+            <div style={{ marginTop: "11%" }}>
+
+                <Footer />
+            </div>
         </>
     )
 }

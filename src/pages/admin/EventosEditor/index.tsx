@@ -14,10 +14,16 @@ import {
 import { DashboardAdmin } from "../DashboardAdmin";
 
 export function EventosEditor() {
+    // Token salvo no navegador para autenticação
     const token = localStorage.getItem("access_token");
+
+    // Lista de eventos carregados da API
     const [eventos, setEventos] = useState([]);
+
+    // Arquivo de imagem selecionado pelo usuário
     const [file, setFile] = useState<File | null>(null);
 
+    // Estado do formulário de criação/edição
     const [form, setForm] = useState({
         titulo: "",
         descricao: "",
@@ -25,39 +31,47 @@ export function EventosEditor() {
         dataFim: "",
     });
 
+    // Carrega os eventos ao abrir a página
     useEffect(() => {
         fetchEventos();
     }, []);
 
+    // Busca todos os eventos cadastrados na API
     const fetchEventos = async () => {
         const res = await api.get("/api/eventos");
         setEventos(res.data);
     };
 
-    // converte File -> base64 (sem prefixo data:)
+    // Converte um arquivo (File) em base64 sem o prefixo "data:image/png..."
     function fileToBase64(file: File): Promise<string> {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
+
+            // Quando terminar a leitura
             reader.onload = () => {
                 const result = reader.result as string;
-                // result será "data:<type>;base64,AAA..."
-                // removemos o prefixo
+
+                // Divide e remove o prefixo do base64
                 const base64 = result.split(',')[1];
                 resolve(base64);
             };
+
             reader.onerror = (err) => reject(err);
+
+            // Lê o arquivo como dataURL
             reader.readAsDataURL(file);
         });
     }
 
+    // Envia o formulário + imagem para a API
     const salvar = async () => {
         try {
             if (!file) return alert("Selecione uma imagem!");
 
-            // converte
+            // Converte o arquivo antes de enviar
             const base64 = await fileToBase64(file);
 
-            // prepara payload JSON
+            // Objeto que será enviado ao backend
             const payload = {
                 titulo: form.titulo,
                 descricao: form.descricao,
@@ -65,9 +79,10 @@ export function EventosEditor() {
                 dataFim: form.dataFim || undefined,
                 fileName: file.name,
                 fileType: file.type,
-                base64: base64, // sem data: prefix
+                base64: base64, // somente o base64 limpo
             };
 
+            // Envio para rota protegida
             await api.post('/api/eventos/upload', payload, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -75,20 +90,28 @@ export function EventosEditor() {
                 }
             });
 
+            // Atualiza lista
             fetchEventos();
+
+            // Limpa formulário
             setForm({ titulo: "", descricao: "", dataInicio: "", dataFim: "" });
             setFile(null);
+
         } catch (err) {
             console.error(err);
             alert('Erro ao enviar evento');
         }
     };
 
+    // Remove um evento pelo ID
     const deletar = async (id: number) => {
         if (!confirm("Excluir evento?")) return;
+
         await api.delete(`/api/eventos/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
+
+        // Atualiza lista
         fetchEventos();
     };
 
@@ -98,27 +121,33 @@ export function EventosEditor() {
 
                 <Header>Gerenciar Eventos</Header>
 
+                {/* Formulário para criar evento */}
                 <FormCard>
-                    <Input placeholder="Título"
+                    <Input
+                        placeholder="Título"
                         value={form.titulo}
                         onChange={e => setForm({ ...form, titulo: e.target.value })}
                     />
 
-                    <Input type="date"
+                    <Input
+                        type="date"
                         value={form.dataInicio}
                         onChange={e => setForm({ ...form, dataInicio: e.target.value })}
                     />
 
-                    <Input type="date"
+                    <Input
+                        type="date"
                         value={form.dataFim}
                         onChange={e => setForm({ ...form, dataFim: e.target.value })}
                     />
 
-                    <TextArea placeholder="Descrição"
+                    <TextArea
+                        placeholder="Descrição"
                         value={form.descricao}
                         onChange={e => setForm({ ...form, descricao: e.target.value })}
                     />
 
+                    {/* Input de imagem */}
                     <input
                         type="file"
                         accept="image/*"
@@ -128,20 +157,29 @@ export function EventosEditor() {
                     <ButtonSalvar onClick={salvar}>Salvar Evento</ButtonSalvar>
                 </FormCard>
 
-
+                {/* Tabela com eventos existentes */}
                 <Table>
                     <thead>
                         <tr>
-                            <th>Imagem</th><th>Título</th><th>Datas</th><th>Ações</th>
+                            <th>Imagem</th>
+                            <th>Título</th>
+                            <th>Data início</th>
+                            <th>Data fim</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         {eventos.map((e: any) => (
                             <tr key={e.id}>
+                                {/* imagem recebida da API */}
                                 <td><Img src={e.imagem || ''} /></td>
+
                                 <td>{e.titulo}</td>
-                                <td>{e.dataInicio} → {e.dataFim}</td>
+
+                                {/* Converte datas para formato BR */}
+                                <td>{new Date(e.dataInicio).toLocaleDateString("pt-BR")}</td>
+                                <td>{new Date(e.dataFim).toLocaleDateString("pt-BR")}</td>
 
                                 <td>
                                     <DeleteButton onClick={() => deletar(e.id)}>
@@ -157,3 +195,4 @@ export function EventosEditor() {
         </DashboardAdmin>
     );
 }
+

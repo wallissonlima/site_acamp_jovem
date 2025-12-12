@@ -112,6 +112,7 @@ export const HomeEditor = () => {
 
             toast("Conteúdo salvo com sucesso!");
             loadContent();
+            loadEventos();
         } catch {
             toast.error("Erro ao salvar conteúdo");
         } finally {
@@ -120,9 +121,7 @@ export const HomeEditor = () => {
     };
 
 
-    // ===========================
-    //   DELETE CORRIGIDO 🔥
-    // ===========================
+    //   DELETE
     const handleDelete = async (id: number) => {
         if (!confirm("Excluir conteúdo?")) return;
 
@@ -213,7 +212,10 @@ export const HomeEditor = () => {
                     <Table>
                         <thead>
                             <tr>
-                                <th>Imagem</th><th>Título</th><th>Descrição</th><th>Ações</th>
+                                <th>Imagem</th>
+                                <th>Título</th>
+                                <th>Descrição</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
 

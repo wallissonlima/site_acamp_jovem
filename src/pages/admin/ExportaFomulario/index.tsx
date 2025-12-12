@@ -6,6 +6,16 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { toast } from "react-toastify";
 
+
+function formatCPF(value) {
+    if (!value) return "";
+    return value
+        .replace(/\D/g, "")
+        .replace(/(\d{3})(\d)/, "$1.$2")
+        .replace(/(\d{3})(\d)/, "$1.$2")
+        .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+}
+
 export const ExportaFormulario = () => {
     const token = localStorage.getItem("access_token");
     const [formulario, setFormulario] = useState<any[]>([]);
@@ -52,17 +62,17 @@ export const ExportaFormulario = () => {
         saveAs(new Blob([wbout], { type: "application/octet-stream" }), "formularios.xlsx");
     };
 
-    const deletarTudo = async () => {
-        if (!confirm("Deseja realmente apagar todos os formulários?")) return;
+    const deletar = async (id: string) => {
+        if (!confirm("Deseja realmente apagar candidato?")) return;
         try {
-            await api.delete("/api/formulario/all", {
+            await api.delete(`/api/formulario/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchFormulario();
-            toast("Todos os formulários foram excluídos!");
+            toast("Canditato excluídos com sucesso");
         } catch (err) {
             console.error(err);
-            toast.error("Erro ao excluir todos os formulários");
+            toast.error("Erro ao excluir o candidato");
         }
     };
     useEffect(() => {
@@ -80,9 +90,9 @@ export const ExportaFormulario = () => {
                         <div>
                             <BackButton onClick={exportToExcel}>Exporta</BackButton>
                         </div>
-                        <div>
+                        {/* <div>
                             <DeleteButton onClick={deletarTudo}>Limpa o banco</DeleteButton>
-                        </div>
+                        </div> */}
                     </ButtonEditor>
                 </Header>
                 <Table>
@@ -90,9 +100,11 @@ export const ExportaFormulario = () => {
                         <tr>
                             <th>Nome</th>
                             <th>Email</th>
-                            <th>Data nascimento</th>
+                            <th>CPF</th>
                             <th>Telefone</th>
                             <th>Nome Credencial</th>
+                            <th>Status</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
 
@@ -101,6 +113,7 @@ export const ExportaFormulario = () => {
                             <tr key={e.id}>
                                 <td>{e.name}</td>
                                 <td>{e.email}</td>
+                                <td>{formatCPF(e.cpf)}</td>
                                 <td>{new Date(e.dataNascimento).toLocaleDateString("pt-BR")}</td>
                                 <td>
                                     {e.telefone
@@ -109,6 +122,11 @@ export const ExportaFormulario = () => {
                                     }
                                 </td>
                                 <td>{e.nomeCredencial}</td>
+                                <td>
+                                    <DeleteButton onClick={() => deletar(e.id)}>
+                                        Excluir
+                                    </DeleteButton>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

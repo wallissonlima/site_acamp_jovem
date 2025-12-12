@@ -41,6 +41,7 @@ export const CustomDiv = styled.div`
     position: relative;
 
     .inputName,
+    .inputCpf,
     .inputEmail,
     .inputDescricao {
       width: 100%;

@@ -51,7 +51,13 @@ export function DashboardAdmin({ children }: { children: React.ReactNode }) {
           active={location.pathname === "/admin/exports"}
           onClick={() => navigate("/admin/exports")}
         >
-          Exporta excel
+          Exporta participantes
+        </Button>
+        <Button
+          active={location.pathname === "/admin/exports/servos"}
+          onClick={() => navigate("/admin/exports/servos")}
+        >
+          Exporta servos
         </Button>
 
         <ButtonDanger onClick={handleLogout}><SignOut size={15} /> Sair</ButtonDanger>

@@ -128,7 +128,7 @@ export const CronogramaEditor = () => {
                         {cronograma.map((e: any) => (
                             <tr key={e.id}>
                                 <td>{e.title}</td>
-                                <td>{e.date}</td>
+                                 <td>{new Date(e.date).toLocaleDateString("pt-BR")}</td>
                                 <td>{e.note} </td>
 
                                 {/* <td>

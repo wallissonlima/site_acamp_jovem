@@ -6,6 +6,7 @@ export const Context = styled.nav`
   justify-content: center;
   padding: 2px; 
   background: ${(props) => props.theme["gray-400"]};
+  /* margin-top: 11%; */
   `;
 
 export const FooterCustom = styled.footer`

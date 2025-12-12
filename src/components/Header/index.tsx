@@ -74,7 +74,7 @@ export const Header: React.FC = () => {
 
             <NavItem>
               <NavLink onClick={() => scrollToSection("acampajovem")}>
-                Acampa Jovem
+                Incrições
               </NavLink>
             </NavItem>
 

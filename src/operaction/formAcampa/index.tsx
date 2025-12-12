@@ -3,11 +3,22 @@ import axios from "axios";
 import { CustomDiv, CustomForm } from "./styles";
 import { toast } from "react-toastify";
 
+// 👉 FUNÇÃO DA MÁSCARA DE CPF AQUI
+function formatCPF(value) {
+  if (!value) return "";
+  return value
+    .replace(/\D/g, "")
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+}
+
 export const FormAcampa = forwardRef(({ onSuccess }, ref) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     dataNascimento: "",
+    cpf: "",
     telefone: "",
     nomeCredencial: "",
     tamanhoCamiseta: "",
@@ -50,6 +61,7 @@ export const FormAcampa = forwardRef(({ onSuccess }, ref) => {
         name: "",
         email: "",
         dataNascimento: "",
+        cpf: "",
         telefone: "",
         nomeCredencial: "",
         tamanhoCamiseta: "",
@@ -70,6 +82,19 @@ export const FormAcampa = forwardRef(({ onSuccess }, ref) => {
       <CustomDiv>
         <div>
           <input
+            name="name"
+            className="inputName"
+            type="text"
+            required
+            style={{ textTransform: "uppercase" }}
+            value={formData.name}
+            onChange={handleChange}
+          />
+          <label className="nameLabel">Nome Completo</label>
+        </div>
+
+        <div>
+          <input
             name="email"
             className="inputEmail"
             type="email"
@@ -82,16 +107,23 @@ export const FormAcampa = forwardRef(({ onSuccess }, ref) => {
 
         <div>
           <input
-            name="name"
-            className="inputName"
+            name="cpf"
+            className="inputCpf"
             type="text"
             required
-            style={{ textTransform: "uppercase" }}
-            value={formData.name}
-            onChange={handleChange}
+            maxLength={14} // agora 000.000.000-00 tem 14 caracteres
+            value={formatCPF(formData.cpf)}
+            onChange={(e) => {
+              const onlyNums = e.target.value.replace(/\D/g, "").slice(0, 11);
+              handleChange({
+                target: { name: "cpf", value: onlyNums }
+              });
+            }}
           />
-          <label className="nameLabel">Nome Completo</label>
+          <label className="nameLabel">CPF</label>
         </div>
+
+
 
         <div>
           <input
