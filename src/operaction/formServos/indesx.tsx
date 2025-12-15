@@ -1,4 +1,4 @@
-export const formServos = () => {
+export const FormServos = () => {
     return (<div>formServos</div>
     );
 };

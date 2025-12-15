@@ -18,7 +18,7 @@ export const Container = styled.div`
 
 /* ================== 📝 FORMULÁRIO ================== */
 export const Form = styled.form`
-  max-width: 900px;
+  /* max-width: 900px; */
   margin: 20px auto;
   display: grid;
   gap: 14px;
@@ -164,27 +164,28 @@ export const DeleteButton = styled.button`
 
 /* ================== 📊 TABELA ================== */
 export const Table = styled.table`
-  width:100%;
-  background:#ffffff12;
-  border: 1px solid #ffffff21;
-  border-radius:14px;
-  overflow:hidden;
-  backdrop-filter: blur(6px);
-  box-shadow:0 3px 10px #00000055;
-
-  th{
-    background:#00000025;
-    padding:14px;
-    font-weight:700;
-  }
-  
-  td{
-    padding:14px;
-  }
-  
-  tr:hover{
+ width:100%;
     background:#ffffff12;
-  }
+    border: 1px solid #ffffff21;
+    border-radius:14px;
+    backdrop-filter: blur(6px);
+    overflow:hidden;
+    color:#fff;
+    box-shadow:0 3px 10px #00000055;
+    margin-top: 15px;
+
+    th{
+        background:#00000025;
+        padding:14px;
+    }
+
+    td{
+        padding:14px;
+    }
+
+    tr:hover{
+        background:#ffffff12;
+    }
 `;
 
 /* ================== 🖼 IMAGEM ================== */

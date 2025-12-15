@@ -208,52 +208,52 @@ export const HomeEditor = () => {
 
 
                 {/* ==== TABELA COM ITEMS QUE TEM IMG + TITLE + DESC ==== */}
-                <div style={{ maxWidth: "900px", margin: "20px auto" }}>
-                    <Table>
-                        <thead>
-                            <tr>
-                                <th>Imagem</th>
-                                <th>Título</th>
-                                <th>Descrição</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
 
-                        <tbody>
-                            {eventos
-                                .filter(e => e.value && e.title && e.description)
-                                .map(e => (
-                                    <tr key={e.id}>
-                                        <td>
-                                            <Img src={
-                                                e.value.startsWith("data:")
-                                                    ? e.value
-                                                    : `data:image/jpeg;base64,${e.value}`
-                                            } />
-                                        </td>
+                <Table>
+                    <thead>
+                        <tr>
+                            <th>Imagem</th>
+                            <th>Título</th>
+                            <th>Descrição</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
 
-                                        <td>{e.title}</td>
-                                        <td>{e.description}</td>
+                    <tbody>
+                        {eventos
+                            .filter(e => e.value && e.title && e.description)
+                            .map(e => (
+                                <tr key={e.id}>
+                                    <td>
+                                        <Img src={
+                                            e.value.startsWith("data:")
+                                                ? e.value
+                                                : `data:image/jpeg;base64,${e.value}`
+                                        } />
+                                    </td>
 
-                                        <td>
-                                            <button
-                                                onClick={() => handleDelete(e.id)}
-                                                style={{
-                                                    background: "#e74c3c",
-                                                    border: "none",
-                                                    padding: "6px 12px",
-                                                    borderRadius: 6,
-                                                    color: "#fff",
-                                                    cursor: "pointer"
-                                                }}>
-                                                Excluir
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                        </tbody>
-                    </Table>
-                </div>
+                                    <td>{e.title}</td>
+                                    <td>{e.description}</td>
+
+                                    <td>
+                                        <button
+                                            onClick={() => handleDelete(e.id)}
+                                            style={{
+                                                background: "#e74c3c",
+                                                border: "none",
+                                                padding: "6px 12px",
+                                                borderRadius: 6,
+                                                color: "#fff",
+                                                cursor: "pointer"
+                                            }}>
+                                            Excluir
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                    </tbody>
+                </Table>
+
             </Container>
         </DashboardAdmin>
     );

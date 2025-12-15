@@ -109,9 +109,9 @@ export const Header: React.FC = () => {
             <Link to="/admin/login">
               <User size={25} style={{ padding: 1, color: "#9b59b6" }} />
             </Link>
-            <Link style={{ color: "#9b59b6" }} to="/carrinho">
+            {/* <Link style={{ color: "#9b59b6" }} to="/carrinho">
               <ShoppingCart size={25} style={{ padding: 1 }} />
-            </Link>
+            </Link> */}
           </div>
         </Collapse>
       </Navbar>

@@ -167,6 +167,7 @@ export const FormAcampa = forwardRef(({ onSuccess }, ref) => {
             name="nomeCredencial"
             className="inputName"
             type="text"
+            placeholder="Nome e sobrenome"
             required
             style={{ textTransform: "uppercase" }}
             value={formData.nomeCredencial}
