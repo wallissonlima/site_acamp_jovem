@@ -54,7 +54,7 @@ export const LoginAdmin = () => {
                 setUser({ email: '', password: '' });
 
                 // Redireciona para o Dashboard
-                navigate('/admin/dashboard', { replace: true });
+                navigate('/admin/home', { replace: true });
             }
         } catch (error: any) {
             if (error.response?.status === 401) {

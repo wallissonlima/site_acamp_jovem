@@ -12,6 +12,7 @@ import { CronogramaEditor } from "./src/pages/admin/CronogramaEditor";
 import { DepoimentosEditor } from "./src/pages/admin/DepoimentosEditor";
 import { ConfigAdmin } from "./src/pages/admin/components";
 import { ExportaFormulario } from "./src/pages/admin/ExportaFomulario";
+import { ExportaServos } from "./src/pages/admin/ExportaServos";
 
 export function Router() {
   return (
@@ -43,9 +44,10 @@ export function Router() {
         <Route path="/admin/depoimentos" element={<DepoimentosEditor />} />
         <Route path="/admin/config" element={<ConfigAdmin />} />
         <Route path="/admin/exports" element={<ExportaFormulario />} />
+        <Route path="/admin/exportsServos" element={<ExportaServos />} />
 
         <Route
-          path="/admin/dashboard"
+          path="/admin/home"
           element={
             <ProtectedRoute>
               <HomeEditor />

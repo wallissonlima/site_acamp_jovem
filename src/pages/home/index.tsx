@@ -31,10 +31,12 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
 import { FormAcampa } from "../../operaction/formAcampa";
 import { MercadoPagoButton } from "../admin/ButtonPago";
 import { EventTimeline } from "../../components/EventTimeline";
+import { FormServos } from "../../operaction/formServos/indesx";
 
 export const Home = () => {
     const [openInscricao, setOpenInscricao] = useState<boolean>(false);
-    const formRef = useRef(null);
+    const formRef = useRef<HTMLFormElement | null>(null);
+    const [formTipo, setFormTipo] = useState<'acampa' | 'servos'>('acampa');
     const [content, setContent] = useState<Record<string, any>>({});
     const [eventos, setEventos] = useState<any[]>([]);
     const [depoimentos, setDepoimentos] = useState<any[]>([]);
@@ -88,6 +90,12 @@ export const Home = () => {
         loadTimeline();
     }, []);
 
+    const handleSubmitForm = () => {
+        if (!formRef.current) return;
+        formRef.current.requestSubmit();
+    };
+
+
     return (
         <>
             <Header />
@@ -133,9 +141,15 @@ export const Home = () => {
                         <h2>{left?.title || "Acampa Jovem 2026"}</h2>
                         <p>{left?.description || "Informações adicionais sobre o evento."}</p>
                         <EventButton>
-                            <CustomButton onClick={() => setOpenInscricao(true)}>
+                            <CustomButton
+                                onClick={() => {
+                                    setFormTipo('acampa');
+                                    setOpenInscricao(true);
+                                }}
+                            >
                                 Inscrições participantes
                             </CustomButton>
+
                         </EventButton>
                     </EventInfo>
 
@@ -144,9 +158,15 @@ export const Home = () => {
                         <h2>{right?.title || "Uma experiência que transforma vidas!"}</h2>
                         <p>{right?.description || "Inspirado por Deus..."}</p>
                         <EventButton>
-                            <CustomButton onClick={() => setOpenInscricao(true)}>
+                            <CustomButton
+                                onClick={() => {
+                                    setFormTipo('servos');
+                                    setOpenInscricao(true);
+                                }}
+                            >
                                 Inscrições Servos
                             </CustomButton>
+
                         </EventButton>
                     </EventInfo2>
                 </EventContent>
@@ -179,30 +199,43 @@ export const Home = () => {
                 size="lg"
             >
                 <ModernModal>
-                    <ModernTitle>ACAMPA JOVEM 2025 – INSCRIÇÃO</ModernTitle>
+                    <ModernTitle>
+                        {formTipo === 'acampa'
+                            ? 'ACAMPA JOVEM 2025 – INSCRIÇÃO PARTICIPANTE'
+                            : 'ACAMPA JOVEM 2025 – INSCRIÇÃO SERVOS'}
+                    </ModernTitle>
 
                     <ModernInfo>
-                        Idade para participar: 14 a 21 anos <br />
-                        Preencha com atenção todos os campos. Essa ficha não poderá ser alterada.
+                        {formTipo === 'acampa' ? (
+                            <>
+                                Idade para participar: 14 a 21 anos <br />
+                                Preencha com atenção todos os campos.
+                            </>
+                        ) : (
+                            <>
+                                Formulário exclusivo para servos do evento.
+                            </>
+                        )}
                     </ModernInfo>
 
-                    <FormAcampa
-                        ref={formRef}
-                        onSuccess={() => {
-                            setOpenInscricao(false);
-                            setShowPayment(true);
-                        }}
-                    />
-
-                    <ModernFooter>
-                        <ModernButton
-                            type="submit"
-                            onClick={() => {
-                                if (formRef.current) {
-                                    formRef.current.requestSubmit();
-                                }
+                    {formTipo === 'acampa' ? (
+                        <FormAcampa
+                            ref={formRef}
+                            onSuccess={() => {
+                                setOpenInscricao(false);
+                                setShowPayment(true);
                             }}
-                        >
+                        />
+                    ) : (
+                        <FormServos
+                            ref={formRef}
+                            onSuccess={() => {
+                                setOpenInscricao(false);
+                            }}
+                        />
+                    )}
+                    <ModernFooter>
+                        <ModernButton type="button" onClick={handleSubmitForm}>
                             ENVIAR INSCRIÇÃO
                         </ModernButton>
 

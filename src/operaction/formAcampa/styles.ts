@@ -27,7 +27,7 @@ export const CustomForm = styled.form`
   letter-spacing: 0.5px;
   position: relative;
   text-transform: uppercase;
-  padding: 40px 20px;
+  
   border-bottom: 2px solid #1f5f5b;
 `;
 

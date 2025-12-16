@@ -1,6 +1,7 @@
 import { SignOut } from "phosphor-react";
 import { Container, Sidebar, Title, Button, ButtonDanger, PageArea } from "./styles";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 export function DashboardAdmin({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
@@ -10,6 +11,12 @@ export function DashboardAdmin({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("token");
     navigate("/admin/login");
   }
+
+  useEffect(() => {
+    if (location.pathname === "/admin") {
+      navigate("/admin/home");
+    }
+  }, [location.pathname, navigate]);
 
   return (
     <Container>
@@ -54,8 +61,8 @@ export function DashboardAdmin({ children }: { children: React.ReactNode }) {
           Exporta participantes
         </Button>
         <Button
-          active={location.pathname === "/admin/exports/servos"}
-          onClick={() => navigate("/admin/exports/servos")}
+          active={location.pathname === "/admin/exportsServos"}
+          onClick={() => navigate("/admin/exportsServos")}
         >
           Exporta servos
         </Button>

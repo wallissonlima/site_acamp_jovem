@@ -6,8 +6,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { toast } from "react-toastify";
 
-
-function formatCPF(value) {
+function formatCPF(value: any) {
     if (!value) return "";
     return value
         .replace(/\D/g, "")
@@ -16,14 +15,14 @@ function formatCPF(value) {
         .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
 }
 
-export const ExportaFormulario = () => {
+export const ExportaServos = () => {
     const token = localStorage.getItem("access_token");
     const [formulario, setFormulario] = useState<any[]>([]);
 
     const fetchFormulario = async () => {
         if (!token) return;
         try {
-            const res = await api.get("/api/formulario", {
+            const res = await api.get("/api/formularioServos", {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setFormulario(res.data);
@@ -44,13 +43,9 @@ export const ExportaFormulario = () => {
             Nome: f.name,
             Email: f.email,
             Telefone: f.telefone ?? "",
-            "CPF": formatCPF(f.cpf),
             "Nome Credencial": f.nomeCredencial,
-            "Data Nascimento": f.dataNascimento ? new Date(f.dataNascimento).toLocaleDateString() : "",
-            "Nome Responsável": f.nomeResponsavel ?? "",
-            "Telefone Responsável": f.telefoneResponsavel ?? "",
+            "CPF": formatCPF(f.cpf),
             "Tamanho Camiseta": f.tamanhoCamiseta ?? "",
-            "Autorização Imagem": f.autorizacaoImagem ?? "",
             "Alergia / Restrição": f.alergiaRestricao ?? "",
             Descrição: f.descricao ?? "",
         }));
@@ -85,7 +80,7 @@ export const ExportaFormulario = () => {
             <Container>
                 <Header>
                     <h2>
-                        Exporta Formulário
+                        Exporta Formulário Servos
                     </h2>
                     <ButtonEditor>
                         <div>
@@ -102,7 +97,6 @@ export const ExportaFormulario = () => {
                             <th>Nome</th>
                             <th>Email</th>
                             <th>CPF</th>
-                            <th>Telefone</th>
                             <th>Nome Credencial</th>
                             <th>Status</th>
                             <th>Ações</th>
@@ -115,15 +109,8 @@ export const ExportaFormulario = () => {
                                 <td>{e.name}</td>
                                 <td>{e.email}</td>
                                 <td>{formatCPF(e.cpf)}</td>
-                                
-                                <td>
-                                    {e.telefone
-                                        ?.replace(/\D/g, "")             // Remove não números
-                                        .replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3")
-                                    }
-                                </td>
                                 <td>{e.nomeCredencial}</td>
-                                <td>test2</td>
+                                <td>teste 3</td>
                                 <td>
                                     <DeleteButton onClick={() => deletar(e.id)}>
                                         Excluir
