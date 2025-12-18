@@ -1,6 +1,8 @@
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { PayButton, PaymentContainer, WalletBox } from './styles';
+import { CreditCard } from 'phosphor-react';
 
 // 🔹 Inicializa UMA VEZ
 initMercadoPago("APP_USR-67af6af5-f13d-41c3-b52b-857e5112c17d");
@@ -15,6 +17,12 @@ interface ValoresResponse {
     priceParticipante: number;
     priceServo: number;
 }
+
+const formatBRL = (value: number) =>
+    value.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+    });
 
 export function MercadoPagoButton({ tipo }: Props) {
     const [preferenceId, setPreferenceId] = useState<string | null>(null);
@@ -63,18 +71,22 @@ export function MercadoPagoButton({ tipo }: Props) {
     }
 
     return (
-        <div>
-            <button onClick={handleBuy} disabled={loading}>
+        <PaymentContainer>
+            <PayButton onClick={handleBuy} loading={loading}>
+                <CreditCard size={20} />
+
                 {loading
                     ? "Gerando pagamento..."
                     : tipo === "SERVO"
-                        ? `Pagar inscrição de Servo — R$ ${valor}`
-                        : `Pagar inscrição de Participante — R$ ${valor}`}
-            </button>
+                        ? `Pagar inscrição de Servo — ${formatBRL(valor)}`
+                        : `Pagar inscrição de Participante — ${formatBRL(valor)}`}
+            </PayButton>
 
             {preferenceId && (
-                <Wallet initialization={{ preferenceId }} />
+                <WalletBox>
+                    <Wallet initialization={{ preferenceId }} />
+                </WalletBox>
             )}
-        </div>
+        </PaymentContainer>
     );
 }

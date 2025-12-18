@@ -45,6 +45,7 @@ export const FormServos = forwardRef<HTMLFormElement, FormServosProps>(
 
             try {
                 await axios.post("http://localhost:3000/api/formularioServos", {
+                    tipo: "SERVO",
                     ...formData,
                     telefone: formData.telefone || null,
                     tamanhoCamiseta: formData.tamanhoCamiseta || null,

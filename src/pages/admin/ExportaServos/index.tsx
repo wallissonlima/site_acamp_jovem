@@ -77,17 +77,18 @@ export const ExportaServos = () => {
         saveAs(new Blob([wbout], { type: "application/octet-stream" }), "formularios.xlsx");
     };
 
+    //Deleta um servos
     const deletar = async (id: string) => {
-        if (!confirm("Deseja realmente apagar candidato?")) return;
+        if (!confirm("Deseja realmente apagar servo?")) return;
         try {
-            await api.delete(`/api/formulario/${id}`, {
+            await api.delete(`/api/formularioServos/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchFormulario();
-            toast("Canditato excluídos com sucesso");
+            toast("Servo excluídos com sucesso");
         } catch (err) {
             console.error(err);
-            toast.error("Erro ao excluir o candidato");
+            toast.error("Erro ao excluir o servo");
         }
     };
     useEffect(() => {

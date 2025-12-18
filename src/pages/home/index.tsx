@@ -41,7 +41,7 @@ export const Home = () => {
     const [content, setContent] = useState<Record<string, any>>({});
     const [eventos, setEventos] = useState<any[]>([]);
     const [depoimentos, setDepoimentos] = useState<any[]>([]);
-    const [showPayment, setShowPayment] = useState(false);
+
     const [eventDate, setEventDate] = useState("");
     const [milestones, setMilestones] = useState([]);
 
@@ -50,6 +50,9 @@ export const Home = () => {
     const [inscricoesAtivas, setInscricoesAtivas] = useState(true);
     const [limiteServos, setLimiteServos] = useState<number | null>(null);
     const [totalServos, setTotalServos] = useState(0);
+    const [tipoPagamento, setTipoPagamento] = useState<'SERVO' | 'PARTICIPANTE' | null>(null);
+    const [showPayment, setShowPayment] = useState(false);
+
 
 
 
@@ -191,7 +194,8 @@ export const Home = () => {
                                     if (vagasEsgotadas) return;
 
                                     setFormTipo("acampa");
-                                    setOpenInscricao(true);
+                                    setTipoPagamento("PARTICIPANTE"); // 👈 define o tipo
+                                    setOpenInscricao(true);             // 👈 abre o modal
                                 }}
                             >
                                 {vagasEsgotadas
@@ -199,6 +203,7 @@ export const Home = () => {
                                     : "Inscrições participantes"}
                             </CustomButton>
                         </EventButton>
+
 
                     </EventInfo>
 
@@ -213,6 +218,7 @@ export const Home = () => {
                                     if (vagasServosEsgotadas) return;
 
                                     setFormTipo('servos');
+                                    setTipoPagamento("SERVO");
                                     setOpenInscricao(true);
                                 }}
                             >
@@ -278,7 +284,7 @@ export const Home = () => {
                             ref={formRef}
                             onSuccess={() => {
                                 setOpenInscricao(false);
-                                setShowPayment(true);
+                                setShowPayment(true); // 👈 abre pagamento
                             }}
                         />
                     ) : (
@@ -286,6 +292,7 @@ export const Home = () => {
                             ref={formRef}
                             onSuccess={() => {
                                 setOpenInscricao(false);
+                                setShowPayment(true);
                             }}
                         />
                     )}
@@ -301,27 +308,32 @@ export const Home = () => {
                 </ModernModal>
             </Modal>
 
+            {/* 🔹 MODAL DE PAGAMENTO */}
             <Modal
                 show={showPayment}
                 onHide={() => setShowPayment(false)}
                 centered
                 size="md"
             >
-                <ModernModal style={{ textAlign: "center" }}>
-                    <ModernTitle>Pagamento da Inscrição</ModernTitle>
+                <div style={{ textAlign: "center", padding: 20 }}>
+                    <h3>Pagamento da Inscrição</h3>
 
-                    <ModernInfo>
-                        Finalize o pagamento para confirmar sua vaga.
-                    </ModernInfo>
+                    <p>
+                        Inscrição salva com sucesso!
+                        Agora finalize o pagamento.
+                    </p>
 
-                    <MercadoPagoButton tipo="PARTICIPANTE" />
-                    <MercadoPagoButton tipo="SERVO" />
+                    {tipoPagamento && (
+                        <MercadoPagoButton tipo={tipoPagamento} />
+                    )}
 
-
-                    <PaymentCloseButton onClick={() => setShowPayment(false)}>
+                    <button
+                        style={{ marginTop: 20 }}
+                        onClick={() => setShowPayment(false)}
+                    >
                         Fechar
-                    </PaymentCloseButton>
-                </ModernModal>
+                    </button>
+                </div>
             </Modal>
 
 
