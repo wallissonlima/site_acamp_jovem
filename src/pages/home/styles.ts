@@ -149,23 +149,34 @@ export const EventButton = styled.div`
   }
 `;
 
-export const CustomButton = styled.button`
+export const CustomButton = styled.button<{ disabled?: boolean }>`
   background: transparent;
   color: #214b49;
   border: 2px solid #214b49;
   border-radius: 8px;
   padding: 10px 18px;
-  cursor: pointer;
   font-weight: 600;
   font-size: 1rem;
   transition: all 0.3s ease;
 
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+
   &:hover {
-    background: #214b49;
-    color: #fff;
-    transform: scale(1.05);
+    ${({ disabled }) =>
+    !disabled &&
+    `
+      background: #214b49;
+      color: #fff;
+      transform: scale(1.05);
+    `}
+  }
+
+  &:disabled {
+    pointer-events: none;
   }
 `;
+
 
 export const ButtonClose = styled.button`
   background: transparent;

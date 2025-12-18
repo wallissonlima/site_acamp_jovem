@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { toast } from "react-toastify";
 
+//formata o CPF
 function formatCPF(value: any) {
     if (!value) return "";
     return value
@@ -14,6 +15,24 @@ function formatCPF(value: any) {
         .replace(/(\d{3})(\d)/, "$1.$2")
         .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
 }
+
+//renderiza o status do pagamento
+function renderStatus(status: string) {
+    switch (status) {
+        case "APROVADO":
+            return <span style={{ color: "green", fontWeight: 600 }}>Aprovado</span>;
+
+        case "EM_PROCESSAMENTO":
+            return <span style={{ color: "orange", fontWeight: 600 }}>Em processamento</span>;
+
+        case "NAO_APROVADO":
+            return <span style={{ color: "red", fontWeight: 600 }}>Não aprovado</span>;
+
+        default:
+            return <span>-</span>;
+    }
+}
+
 
 export const ExportaServos = () => {
     const token = localStorage.getItem("access_token");
@@ -110,7 +129,7 @@ export const ExportaServos = () => {
                                 <td>{e.email}</td>
                                 <td>{formatCPF(e.cpf)}</td>
                                 <td>{e.nomeCredencial}</td>
-                                <td>teste 3</td>
+                                <td>{renderStatus(e.statusPagamento)}</td>
                                 <td>
                                     <DeleteButton onClick={() => deletar(e.id)}>
                                         Excluir

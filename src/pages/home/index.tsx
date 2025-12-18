@@ -32,6 +32,7 @@ import { FormAcampa } from "../../operaction/formAcampa";
 import { MercadoPagoButton } from "../admin/ButtonPago";
 import { EventTimeline } from "../../components/EventTimeline";
 import { FormServos } from "../../operaction/formServos/indesx";
+import axios from "axios";
 
 export const Home = () => {
     const [openInscricao, setOpenInscricao] = useState<boolean>(false);
@@ -43,6 +44,16 @@ export const Home = () => {
     const [showPayment, setShowPayment] = useState(false);
     const [eventDate, setEventDate] = useState("");
     const [milestones, setMilestones] = useState([]);
+
+    const [limiteVagas, setLimiteVagas] = useState<number | null>(null);
+    const [totalInscritos, setTotalInscritos] = useState(0);
+    const [inscricoesAtivas, setInscricoesAtivas] = useState(true);
+    const [limiteServos, setLimiteServos] = useState<number | null>(null);
+    const [totalServos, setTotalServos] = useState(0);
+
+
+
+
 
 
     useEffect(() => {
@@ -95,6 +106,39 @@ export const Home = () => {
         formRef.current.requestSubmit();
     };
 
+    //limite para inscrição 
+    useEffect(() => {
+        async function carregarDados() {
+            try {
+                const response = await axios.get(
+                    "http://localhost:3000/api/limite-inscricao/status"
+                );
+
+                console.log("STATUS API:", response.data);
+
+                // PARTICIPANTES
+                setLimiteVagas(response.data.limiteParticipantes);
+                setTotalInscritos(response.data.totalParticipantes);
+
+                // SERVOS 👇 (ESTAVA FALTANDO)
+                setLimiteServos(response.data.limiteServos);
+                setTotalServos(response.data.totalServos);
+
+            } catch (error) {
+                console.error("Erro ao carregar status", error);
+            }
+        }
+
+        carregarDados();
+    }, []);
+
+
+    const vagasEsgotadas =
+        limiteVagas !== null && totalInscritos >= limiteVagas;
+    const vagasServosEsgotadas =
+        limiteServos !== null && totalServos >= limiteServos;
+
+
 
     return (
         <>
@@ -142,15 +186,20 @@ export const Home = () => {
                         <p>{left?.description || "Informações adicionais sobre o evento."}</p>
                         <EventButton>
                             <CustomButton
+                                disabled={vagasEsgotadas}
                                 onClick={() => {
-                                    setFormTipo('acampa');
+                                    if (vagasEsgotadas) return;
+
+                                    setFormTipo("acampa");
                                     setOpenInscricao(true);
                                 }}
                             >
-                                Inscrições participantes
+                                {vagasEsgotadas
+                                    ? "Inscrições encerradas"
+                                    : "Inscrições participantes"}
                             </CustomButton>
-
                         </EventButton>
+
                     </EventInfo>
 
                     <img src={right?.value ? `data:image/jpeg;base64,${right.value}` : acampa} alt={titleValue('acampa_image_right')} />
@@ -159,15 +208,21 @@ export const Home = () => {
                         <p>{right?.description || "Inspirado por Deus..."}</p>
                         <EventButton>
                             <CustomButton
+                                disabled={vagasServosEsgotadas}
                                 onClick={() => {
+                                    if (vagasServosEsgotadas) return;
+
                                     setFormTipo('servos');
                                     setOpenInscricao(true);
                                 }}
                             >
-                                Inscrições Servos
+                                {vagasServosEsgotadas
+                                    ? "Vagas de servos esgotadas"
+                                    : "Inscrições Servos"}
                             </CustomButton>
-
                         </EventButton>
+
+
                     </EventInfo2>
                 </EventContent>
 
@@ -259,7 +314,9 @@ export const Home = () => {
                         Finalize o pagamento para confirmar sua vaga.
                     </ModernInfo>
 
-                    <MercadoPagoButton />
+                    <MercadoPagoButton tipo="PARTICIPANTE" />
+                    <MercadoPagoButton tipo="SERVO" />
+
 
                     <PaymentCloseButton onClick={() => setShowPayment(false)}>
                         Fechar

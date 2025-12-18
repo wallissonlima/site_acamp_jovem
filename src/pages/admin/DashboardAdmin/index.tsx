@@ -55,6 +55,12 @@ export function DashboardAdmin({ children }: { children: React.ReactNode }) {
           Carousel
         </Button>
         <Button
+          active={location.pathname === "/admin/configInscricoes"}
+          onClick={() => navigate("/admin/configInscricoes")}
+        >
+          Configuração inscrições
+        </Button>
+        <Button
           active={location.pathname === "/admin/exports"}
           onClick={() => navigate("/admin/exports")}
         >

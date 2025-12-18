@@ -1,118 +1,233 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+import { DashboardAdmin } from "../DashboardAdmin";
+import {
+    Container,
+    FormCard,
+    Header,
+    Field,
+    CheckboxRow,
+    Section,
+    SectionTitle,
+    SectionButton,
+} from "./styles";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-import { useNavigate } from 'react-router-dom';
-import api from '../../../config/api';
+function formatCurrency(value: number) {
+    return value.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+    });
+}
+
 
 export function ContentEditor() {
-    const [items, setItems] = useState([]);
-    const [editing, setEditing] = useState(null);
-    const [form, setForm] = useState({ page: 'home', key: '', value: '', type: 'text' });
+    const [limiteParticipantes, setLimiteParticipantes] = useState(0);
+    const [limiteServos, setLimiteServos] = useState(0);
+    const [valorParticipantes, setValorParticipantes] = useState(0);
+    const [valorServos, setValorServos] = useState(0);
+    const [ativo, setAtivo] = useState(true);
+    const [loading, setLoading] = useState(false);
 
-    const token = localStorage.getItem('access_token');
-    const navigate = useNavigate();
+    const [totalParticipantes, setTotalParticipantes] = useState(0);
+    const [totalServos, setTotalServos] = useState(0);
 
+    const [valoresCarregados, setValoresCarregados] = useState(false);
+
+
+    // 🔹 Buscar status
     useEffect(() => {
-        if (!token) {
-            navigate('/admin/login');
-            return;
-        }
-        (async () => {
+        async function carregarStatus() {
             try {
-                await fetchItems();
-            } catch (err) {
-                console.error('Failed to fetch items', err);
+                const response = await axios.get(
+                    "http://localhost:3000/api/limite-inscricao/status"
+                );
+
+                setLimiteParticipantes(response.data.limiteParticipantes ?? 0);
+                setLimiteServos(response.data.limiteServos ?? 0);
+
+                setTotalParticipantes(response.data.totalParticipantes ?? 0);
+                setTotalServos(response.data.totalServos ?? 0);
+
+                setAtivo(response.data.ativo ?? true);
+            } catch (error) {
+                console.error("Erro ao carregar status", error);
             }
-        })();
-    }, [token, navigate]);
-
-    const fetchItems = async () => {
-        const res = await api.get('/content/all', { headers: { Authorization: `Bearer ${token}` } });
-        setItems(res.data);
-    };
-
-    const startEdit = (item) => {
-        setEditing(item.id);
-        setForm({ page: item.page, key: item.key, value: item.value || '', type: item.type || 'text' });
-    };
-
-    const cancelEdit = () => {
-        setEditing(null);
-        setForm({ page: 'home', key: '', value: '', type: 'text' });
-    };
-
-    const save = async () => {
-        try {
-            if (editing) {
-                await api.put(`/content/${editing}`, { value: form.value, type: form.type }, { headers: { Authorization: `Bearer ${token}` } });
-            } else {
-                await api.post('/content', form, { headers: { Authorization: `Bearer ${token}` } });
-            }
-            fetchItems();
-            cancelEdit();
-            alert('Salvo com sucesso');
-        } catch (err) {
-            alert('Erro ao salvar');
         }
-    };
 
-    const del = async (id) => {
-        if (!confirm('Excluir?')) return;
-        await api.delete(`/content/${id}`, { headers: { Authorization: `Bearer ${token}` } });
-        fetchItems();
-    };
+        carregarStatus();
+    }, []);
+
+
+    // 🔹 Buscar valores da inscrição
+    useEffect(() => {
+        async function carregarValores() {
+            try {
+                const response = await axios.get(
+                    "http://localhost:3000/api/valor-incricao"
+                );
+
+                setValorParticipantes(response.data.priceParticipante ?? 0);
+                setValorServos(response.data.priceServo ?? 0);
+
+                setValoresCarregados(true);
+            } catch (error) {
+                console.error("Erro ao carregar valores", error);
+                setValoresCarregados(false);
+            }
+        }
+
+        carregarValores();
+    }, []);
+
+
+    //salvar limites
+    async function salvarLimites() {
+        try {
+            setLoading(true);
+
+            await axios.put("http://localhost:3000/api/limite-inscricao", {
+                limiteParticipantes,
+                limiteServos,
+                ativo,
+            });
+
+            toast("Configurações salvas com sucesso!");
+        } catch (error) {
+            toast.error("Erro ao salvar configurações");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    //salvar valores
+    async function salvarValores() {
+        try {
+
+            await axios.put("http://localhost:3000/api/valor-incricao", {
+                priceParticipante: valorParticipantes,
+                priceServo: valorServos,
+            });
+            toast("Valores salvos com sucesso!");
+        } catch (error) {
+            toast.error("Erro ao salvar Valores");
+        } finally {
+            setLoading(false);
+        }
+    }
+
 
     return (
-        <div style={{ padding: 24 }}>
-            <h1>Editor de Conteúdo</h1>
+        <DashboardAdmin>
+            <Container>
+                <Header>Configurações das Inscrições</Header>
 
-            <div style={{ marginBottom: 20 }}>
-                <label>Page</label>
-                <select value={form.page} onChange={e => setForm({ ...form, page: e.target.value })}>
-                    <option value="home">home</option>
-                    <option value="sobre">sobre</option>
-                    <option value="footer">footer</option>
-                </select>
+                <FormCard>
+                    <div>
 
-                <label>Key</label>
-                <input value={form.key} onChange={e => setForm({ ...form, key: e.target.value })} />
+                        {/* STATUS PARTICIPANTES */}
+                        <p>
+                            <strong>Participantes:</strong>{" "}
+                            {totalParticipantes}
+                            {limiteParticipantes > 0 && ` / ${limiteParticipantes}`}
+                        </p>
 
-                <label>Value</label>
-                <textarea value={form.value} onChange={e => setForm({ ...form, value: e.target.value })} />
+                        {/* STATUS SERVOS */}
+                        <p>
+                            <strong>Servos:</strong>{" "}
+                            {totalServos}
+                            {limiteServos > 0 && ` / ${limiteServos}`}
+                        </p>
 
-                <label>Type</label>
-                <select value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
-                    <option value="text">text</option>
-                    <option value="html">html</option>
-                    <option value="json">json</option>
-                    <option value="image">image</option>
-                </select>
+                    </div>
+                    <div>
 
-                <button onClick={save}>{editing ? 'Atualizar' : 'Criar'}</button>
-                {editing && <button onClick={cancelEdit}>Cancelar</button>}
-            </div>
+                        {/* VALOR PARTICIPANTES */}
+                        <p>
+                            <strong>Valor Participantes:</strong>{" "}
+                            R$ {formatCurrency(valorParticipantes)}
+                        </p>
 
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                    <tr>
-                        <th>id</th><th>page</th><th>key</th><th>value</th><th>type</th><th>actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {items.map(it => (
-                        <tr key={it.id}>
-                            <td>{it.id}</td>
-                            <td>{it.page}</td>
-                            <td>{it.key}</td>
-                            <td style={{ maxWidth: 400, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{it.value}</td>
-                            <td>{it.type}</td>
-                            <td>
-                                <button onClick={() => startEdit(it)}>Editar</button>
-                                <button onClick={() => del(it.id)}>Excluir</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+                        {/* VALOR SERVOS */}
+                        <p>
+                            <strong>Valor Servos:</strong>{" "}
+                            R$ {formatCurrency(valorServos)}
+                        </p>
+                    </div>
+
+                    <CheckboxRow>
+                        <input
+                            type="checkbox"
+                            checked={ativo}
+                            onChange={(e) => setAtivo(e.target.checked)}
+                        />
+                        Inscrições ativas
+                    </CheckboxRow>
+
+                    {/* 🔹 LIMITES */}
+                    <Section>
+                        <SectionTitle>Limites</SectionTitle>
+
+                        <Field>
+                            <label>Limite participantes</label>
+                            <input
+                                type="number"
+                                value={limiteParticipantes}
+                                onChange={(e) => setLimiteParticipantes(+e.target.value)}
+                            />
+                        </Field>
+
+                        <Field>
+                            <label>Limite servos</label>
+                            <input
+                                type="number"
+                                value={limiteServos}
+                                onChange={(e) => setLimiteServos(+e.target.value)}
+                            />
+                        </Field>
+
+                        <SectionButton onClick={salvarLimites} disabled={loading}>
+                            Salvar limites
+                        </SectionButton>
+                    </Section>
+
+                    {/* 🔹 VALORES */}
+                    <Section>
+                        <SectionTitle>Valores</SectionTitle>
+
+                        <Field>
+                            <label>Valor participantes</label>
+                            <input
+                                type="text"
+                                value={formatCurrency(valorParticipantes)}
+                                onChange={(e) => {
+                                    const numericValue = e.target.value
+                                        .replace(/\D/g, "");
+                                    setValorParticipantes(Number(numericValue) / 100);
+                                }}
+                            />
+                        </Field>
+
+                        <Field>
+                            <label>Valor servos</label>
+                            <input
+                                type="text"
+                                value={formatCurrency(valorServos)}
+                                onChange={(e) => {
+                                    const numericValue = e.target.value
+                                        .replace(/\D/g, "");
+                                    setValorServos(Number(numericValue) / 100);
+                                }}
+                            />
+                        </Field>
+
+
+                        <SectionButton onClick={salvarValores}>
+                            Salvar valores
+                        </SectionButton>
+                    </Section>
+                </FormCard>
+            </Container>
+        </DashboardAdmin>
     );
 }

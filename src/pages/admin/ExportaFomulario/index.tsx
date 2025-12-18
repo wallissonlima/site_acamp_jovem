@@ -15,6 +15,22 @@ function formatCPF(value) {
         .replace(/(\d{3})(\d)/, "$1.$2")
         .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
 }
+function renderStatus(status: string) {
+    switch (status) {
+        case "APROVADO":
+            return <span style={{ color: "green", fontWeight: 600 }}>Aprovado</span>;
+
+        case "EM_PROCESSAMENTO":
+            return <span style={{ color: "orange", fontWeight: 600 }}>Em processamento</span>;
+
+        case "NAO_APROVADO":
+            return <span style={{ color: "red", fontWeight: 600 }}>Não aprovado</span>;
+
+        default:
+            return <span>-</span>;
+    }
+}
+
 
 export const ExportaFormulario = () => {
     const token = localStorage.getItem("access_token");
@@ -115,7 +131,7 @@ export const ExportaFormulario = () => {
                                 <td>{e.name}</td>
                                 <td>{e.email}</td>
                                 <td>{formatCPF(e.cpf)}</td>
-                                
+
                                 <td>
                                     {e.telefone
                                         ?.replace(/\D/g, "")             // Remove não números
@@ -123,7 +139,8 @@ export const ExportaFormulario = () => {
                                     }
                                 </td>
                                 <td>{e.nomeCredencial}</td>
-                                <td>test2</td>
+                                <td>{renderStatus(e.statusPagamento)}</td>
+
                                 <td>
                                     <DeleteButton onClick={() => deletar(e.id)}>
                                         Excluir

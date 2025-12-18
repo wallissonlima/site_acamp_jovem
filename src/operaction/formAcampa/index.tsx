@@ -37,37 +37,46 @@ export const FormAcampa = forwardRef(({ onSuccess }, ref) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (
+      formData.telefone &&
+      formData.telefoneResponsavel &&
+      formData.telefone === formData.telefoneResponsavel
+    ) {
+      toast.error("O telefone do participante não pode ser o mesmo do responsável.");
+      return;
+    }
+
     try {
-      // --- 1) Verifica CPF antes de enviar ---
-      const check = await axios.get(`http://localhost:3000/api/formulario/exists-cpf/${formData.cpf}`);
+      const check = await axios.get(
+        `http://localhost:3000/api/formulario/exists-cpf/${formData.cpf}`
+      );
 
       if (check.data.exists) {
         toast.error("Este CPF já está cadastrado!");
-        return; // ❌ cancela envio
+        return;
       }
 
-      // --- 2) Monta o payload ---
       const payload = {
-        ...formData,
-        dataNascimento: formData.dataNascimento
-          ? new Date(formData.dataNascimento.split("/").reverse().join("-"))
-          : null,
-        telefone: formData.telefone || null,
-        nomeResponsavel: formData.nomeResponsavel || null,
-        telefoneResponsavel: formData.telefoneResponsavel || null,
-        tamanhoCamiseta: formData.tamanhoCamiseta || null,
-        autorizacaoImagem: formData.autorizacaoImagem || null,
-        alergiaRestricao: formData.alergiaRestricao || null,
-        descricao: formData.descricao || null,
+        name: formData.name,
+        email: formData.email,
+        cpf: formData.cpf,
+        nomeCredencial: formData.nomeCredencial,
+
+        telefone: formData.telefone || undefined,
+        dataNascimento: formData.dataNascimento || undefined,
+        nomeResponsavel: formData.nomeResponsavel || undefined,
+        telefoneResponsavel: formData.telefoneResponsavel || undefined,
+        tamanhoCamiseta: formData.tamanhoCamiseta || undefined,
+        autorizacaoImagem: formData.autorizacaoImagem || undefined,
+        alergiaRestricao: formData.alergiaRestricao || undefined,
+        descricao: formData.descricao || undefined,
       };
 
-      // --- 3) Envia ---
       await axios.post("http://localhost:3000/api/formulario", payload);
 
       toast.success("Inscrição enviada com sucesso!");
-      if (onSuccess) onSuccess();
+      onSuccess?.();
 
-      // --- 4) Resetar form ---
       setFormData({
         name: "",
         email: "",
@@ -85,7 +94,7 @@ export const FormAcampa = forwardRef(({ onSuccess }, ref) => {
 
     } catch (err) {
       console.error(err);
-      alert("Erro ao enviar inscrição. Verifique os dados e tente novamente.");
+      toast.error("Erro ao enviar inscrição. Verifique os dados.");
     }
   };
 
