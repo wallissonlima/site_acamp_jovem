@@ -66,6 +66,7 @@ export const ExportaServos = () => {
             "CPF": formatCPF(f.cpf),
             "Tamanho Camiseta": f.tamanhoCamiseta ?? "",
             "Alergia / Restrição": f.alergiaRestricao ?? "",
+            "Status Pagamento": f.statusPagamento ?? "",
             Descrição: f.descricao ?? "",
         }));
 

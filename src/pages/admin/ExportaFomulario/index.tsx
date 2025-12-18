@@ -68,6 +68,7 @@ export const ExportaFormulario = () => {
             "Tamanho Camiseta": f.tamanhoCamiseta ?? "",
             "Autorização Imagem": f.autorizacaoImagem ?? "",
             "Alergia / Restrição": f.alergiaRestricao ?? "",
+            "Status Pagamento": f.statusPagamento ?? "",
             Descrição: f.descricao ?? "",
         }));
 
