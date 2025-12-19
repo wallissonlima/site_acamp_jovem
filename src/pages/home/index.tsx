@@ -262,8 +262,8 @@ export const Home = () => {
                 <ModernModal>
                     <ModernTitle>
                         {formTipo === 'acampa'
-                            ? 'ACAMPA JOVEM 2025 – INSCRIÇÃO PARTICIPANTE'
-                            : 'ACAMPA JOVEM 2025 – INSCRIÇÃO SERVOS'}
+                            ? 'ACAMPA JOVEM  – INSCRIÇÃO PARTICIPANTE'
+                            : 'ACAMPA JOVEM  – INSCRIÇÃO SERVOS'}
                     </ModernTitle>
 
                     <ModernInfo>
