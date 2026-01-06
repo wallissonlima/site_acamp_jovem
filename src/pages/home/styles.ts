@@ -297,6 +297,14 @@ export const ModernCancelButton = styled(ModernButton)`
   }
 `;
 
+export const Img = styled.img`
+    width:80%;
+    height:80%px;
+    object-fit:cover;
+    border-radius:6px;
+    border: 1px solid #ffffff21;
+`;
+
 export const PaymentCloseButton = styled.button`
   margin-top: 20px;
   background: #475569;

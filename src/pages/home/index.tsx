@@ -12,6 +12,7 @@ import {
     EventInfo,
     EventInfo2,
     EventosGrid,
+    Img,
     ModernButton,
     ModernCancelButton,
     ModernFooter,
@@ -34,8 +35,18 @@ import { EventTimeline } from "../../components/EventTimeline";
 import { FormServos } from "../../operaction/formServos/indesx";
 import axios from "axios";
 
+function limitarTexto(texto: string, limite = 60) {
+    if (!texto) return '';
+    return texto.length > limite
+        ? texto.slice(0, limite) + '...'
+        : texto;
+}
+
 export const Home = () => {
     const [openInscricao, setOpenInscricao] = useState<boolean>(false);
+    const [openEvento, setOpenEvento] = useState(false);
+    const [eventoSelecionado, setEventoSelecionado] = useState<any>(null);
+
     const formRef = useRef<HTMLFormElement | null>(null);
     const [formTipo, setFormTipo] = useState<'acampa' | 'servos'>('acampa');
     const [content, setContent] = useState<Record<string, any>>({});
@@ -52,6 +63,8 @@ export const Home = () => {
     const [totalServos, setTotalServos] = useState(0);
     const [tipoPagamento, setTipoPagamento] = useState<'SERVO' | 'PARTICIPANTE' | null>(null);
     const [showPayment, setShowPayment] = useState(false);
+
+
 
 
 
@@ -159,13 +172,17 @@ export const Home = () => {
                     <EventosGrid>
                         {eventos.length > 0 ? (
                             eventos.map(e => (
-                                <EventCard key={e.id} onClick={() => console.log("clicou no evento", e.id)}>
+                                <EventCard key={e.id} onClick={() => {
+                                    setEventoSelecionado(e);
+                                    setOpenEvento(true);
+                                }}>
                                     <img
                                         loading="lazy"
                                         src={e.imagem || value('event_default_image')}
                                         alt={e.descricao}
                                     />
-                                    <h3>{e.descricao}</h3>
+                                    <h3>{limitarTexto(e.descricao, 150)}</h3>
+
                                     {/* <h5>{new Date(e.dataInicio).toLocaleDateString("pt-BR")} → {new Date(e.dataFim).toLocaleDateString("pt-BR")}</h5> */}
                                 </EventCard>
                             ))
@@ -335,6 +352,43 @@ export const Home = () => {
                     </button>
                 </div>
             </Modal>
+
+            {/* Modal de Eventos */}
+            <Modal
+                show={openEvento}
+                onHide={() => setOpenEvento(false)}
+                centered
+                size="lg"
+            >
+                <ModernModal>
+                    <ModernTitle>
+                        <h2>{eventoSelecionado?.titulo || 'Evento'}</h2>
+                    </ModernTitle>
+
+                    <ModernInfo>
+                        {eventoSelecionado && (
+                            <>
+                                <Img src={eventoSelecionado.imagem || ''} />
+
+                                <p style={{ color: "#000", padding: 10 }}><b>{eventoSelecionado.descricao}</b> </p>
+
+                                <p>
+                                    📅 {new Date(eventoSelecionado.dataInicio).toLocaleDateString("pt-BR")}
+                                    {' '}→{' '}
+                                    {new Date(eventoSelecionado.dataFim).toLocaleDateString("pt-BR")}
+                                </p>
+                            </>
+                        )}
+                    </ModernInfo>
+
+                    <ModernFooter >
+                        <ModernCancelButton onClick={() => setOpenEvento(false)}>
+                            Fechar
+                        </ModernCancelButton>
+                    </ModernFooter>
+                </ModernModal>
+            </Modal>
+
 
 
 
