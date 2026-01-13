@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Context, Logo } from "./styles";
-import logo from "../../assets/logo1.png";
+import logo from "../../assets/log1.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
   Collapse,

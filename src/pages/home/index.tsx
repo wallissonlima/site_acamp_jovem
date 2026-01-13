@@ -2,7 +2,6 @@ import { CustomCarousel } from "../../components/Carousel";
 import { Footer } from "../../components/footer";
 import { Header } from "../../components/Header";
 import {
-    ButtonClose,
     Content,
     CustomButton,
     DepoiContent,
@@ -19,7 +18,6 @@ import {
     ModernInfo,
     ModernModal,
     ModernTitle,
-    PaymentCloseButton,
     Section,
 } from "./styles";
 
@@ -28,7 +26,7 @@ import jovem from "../../assets/image.png";
 
 import { useEffect, useRef, useState } from "react";
 import api from "../../config/api";
-import { Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import { FormAcampa } from "../../operaction/formAcampa";
 import { MercadoPagoButton } from "../admin/ButtonPago";
 import { EventTimeline } from "../../components/EventTimeline";
@@ -58,19 +56,11 @@ export const Home = () => {
 
     const [limiteVagas, setLimiteVagas] = useState<number | null>(null);
     const [totalInscritos, setTotalInscritos] = useState(0);
-    const [inscricoesAtivas, setInscricoesAtivas] = useState(true);
+
     const [limiteServos, setLimiteServos] = useState<number | null>(null);
     const [totalServos, setTotalServos] = useState(0);
     const [tipoPagamento, setTipoPagamento] = useState<'SERVO' | 'PARTICIPANTE' | null>(null);
     const [showPayment, setShowPayment] = useState(false);
-
-
-
-
-
-
-
-
 
     useEffect(() => {
         // 🔹 Carrega conteúdo da página Home
@@ -388,10 +378,6 @@ export const Home = () => {
                     </ModernFooter>
                 </ModernModal>
             </Modal>
-
-
-
-
         </>
     );
 };

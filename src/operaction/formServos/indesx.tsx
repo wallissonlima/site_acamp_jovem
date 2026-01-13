@@ -44,6 +44,14 @@ export const FormServos = forwardRef<HTMLFormElement, FormServosProps>(
             e.preventDefault();
 
             try {
+                const check = await axios.get(
+                    `http://localhost:3000/api/formularioServos/exists-cpf/${formData.cpf}`
+                );
+
+                if (check.data.exists) {
+                    toast.error("Este CPF já está cadastrado!");
+                    return;
+                }
                 await axios.post("http://localhost:3000/api/formularioServos", {
                     tipo: "SERVO",
                     ...formData,

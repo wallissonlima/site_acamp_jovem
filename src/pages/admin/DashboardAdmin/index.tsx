@@ -25,22 +25,24 @@ export function DashboardAdmin({ children }: { children: React.ReactNode }) {
         <Title>Painel Admin</Title>
 
         <Button
+          active={location.pathname === "/admin/config"}
+          onClick={() => navigate("/admin/config")}
+        >
+          Carousel
+        </Button>
+
+        <Button
           active={location.pathname === "/admin/home"}
           onClick={() => navigate("/admin/home")}
         >
-          Home
+          Editar Seção - Acampa
         </Button>
+
         <Button
           active={location.pathname === "/admin/cronograma"}
           onClick={() => navigate("/admin/cronograma")}
         >
           Cronogramas
-        </Button>
-        <Button
-          active={location.pathname === "/admin/depoimentos"}
-          onClick={() => navigate("/admin/depoimentos")}
-        >
-          Depoimentos
         </Button>
         <Button
           active={location.pathname === "/admin/eventos"}
@@ -49,11 +51,12 @@ export function DashboardAdmin({ children }: { children: React.ReactNode }) {
           Eventos
         </Button>
         <Button
-          active={location.pathname === "/admin/config"}
-          onClick={() => navigate("/admin/config")}
+          active={location.pathname === "/admin/depoimentos"}
+          onClick={() => navigate("/admin/depoimentos")}
         >
-          Carousel
+          Depoimentos
         </Button>
+
         <Button
           active={location.pathname === "/admin/configInscricoes"}
           onClick={() => navigate("/admin/configInscricoes")}

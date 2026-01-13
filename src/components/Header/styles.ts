@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Context = styled.nav`
-  background: linear-gradient(90deg, #fff, #1a1a1a); /* 👈 Fundo preto */
+  background: linear-gradient(90deg, #3d3d3dff, #000000ff); /* 👈 Fundo preto */
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -109,8 +109,8 @@ export const Context = styled.nav`
 `;
 
 export const Logo = styled.img`
-  margin-top: 1px;
-  height: 50px;
+  /* margin-top: 1px; */
+  height: 90px;
   width: 100%;
   object-fit: contain;
   display: block;
