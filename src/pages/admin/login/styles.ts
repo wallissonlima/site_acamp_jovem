@@ -118,7 +118,7 @@ export const FromCotainer = styled.div`
     }
 
     &:not(:disabled):hover {
-      background: ${(props) => props.theme["purple-500"]};
+      /* background: ${(props) => props.theme["purple-500"]}; */
     }
   }
 `;
@@ -181,6 +181,9 @@ export const CustomButton = styled.div`
   &:hover {
     background-color: ${(props) => props.theme["purple-300"]};
     border-color: ${(props) => props.theme["purple-600"]};
+  }
+  .button1{
+    background: transparent;
   }
 `;
 

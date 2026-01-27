@@ -5,7 +5,7 @@ import { PayButton, PaymentContainer, WalletBox } from './styles';
 import { CreditCard } from 'phosphor-react';
 
 // 🔹 Inicializa UMA VEZ
-initMercadoPago("APP_USR-67af6af5-f13d-41c3-b52b-857e5112c17d");
+initMercadoPago("APP_USR-30b149d7-414b-4fde-9651-3487835da6dc");
 
 type TipoInscricao = 'PARTICIPANTE' | 'SERVO';
 
