@@ -12,6 +12,7 @@ import {
     Header,
 } from "./styles";
 import { DashboardAdmin } from "../DashboardAdmin";
+import { toast } from "react-toastify";
 
 export function EventosEditor() {
     // Token salvo no navegador para autenticação
@@ -39,8 +40,17 @@ export function EventosEditor() {
     // Busca todos os eventos cadastrados na API
     const fetchEventos = async () => {
         const res = await api.get("/api/eventos");
-        setEventos(res.data);
+
+        const eventosArray = Array.isArray(res.data)
+            ? res.data
+            : Array.isArray(res.data.eventos)
+                ? res.data.eventos
+                : [];
+
+        setEventos(eventosArray);
     };
+
+
 
     // Converte um arquivo (File) em base64 sem o prefixo "data:image/png..."
     function fileToBase64(file: File): Promise<string> {
@@ -90,6 +100,7 @@ export function EventosEditor() {
                 }
             });
 
+            toast.success("Salvo com sucesso!");
             // Atualiza lista
             fetchEventos();
 
@@ -99,7 +110,7 @@ export function EventosEditor() {
 
         } catch (err) {
             console.error(err);
-            alert('Erro ao enviar evento');
+            toast.error('Erro ao enviar evento');
         }
     };
 
@@ -110,7 +121,7 @@ export function EventosEditor() {
         await api.delete(`/api/eventos/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
-
+        toast.success("Deletado com sucesso!");
         // Atualiza lista
         fetchEventos();
     };
@@ -170,17 +181,12 @@ export function EventosEditor() {
                     </thead>
 
                     <tbody>
-                        {eventos.map((e: any) => (
+                        {Array.isArray(eventos) && eventos.map(e => (
                             <tr key={e.id}>
-                                {/* imagem recebida da API */}
                                 <td><Img src={e.imagem || ''} /></td>
-
                                 <td>{e.titulo}</td>
-
-                                {/* Converte datas para formato BR */}
-                                <td>{new Date(e.dataInicio).toLocaleDateString("pt-BR")}</td>
-                                <td>{new Date(e.dataFim).toLocaleDateString("pt-BR")}</td>
-
+                                <td>{e.dataInicio ? new Date(e.dataInicio).toLocaleDateString("pt-BR") : '-'}</td>
+                                <td>{e.dataFim ? new Date(e.dataFim).toLocaleDateString("pt-BR") : '-'}</td>
                                 <td>
                                     <DeleteButton onClick={() => deletar(e.id)}>
                                         Excluir
@@ -189,6 +195,7 @@ export function EventosEditor() {
                             </tr>
                         ))}
                     </tbody>
+
                 </Table>
 
             </Container>

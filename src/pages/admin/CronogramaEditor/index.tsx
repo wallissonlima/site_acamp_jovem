@@ -13,37 +13,59 @@ import {
     MilestoneBox,
     MilestoneHeader,
     Table,
-    DeleteButton,
 } from "./styles";
+import { toast } from "react-toastify";
 
 export const CronogramaEditor = () => {
     const token = localStorage.getItem("access_token");
-    const [milestones, setMilestones] = useState([]);
-    const [eventDate, setEventDate] = useState("");
-    const [cronograma, setCronograma] = useState([]);
+
+    const [milestones, setMilestones] = useState<any[]>([]);
+    const [cronograma, setCronograma] = useState<any[]>([]);
+    const [eventDate, setEventDate] = useState<string>("");
 
     const load = async () => {
-        const res = await api.get("/api/timeline");
-        setMilestones(res.data.milestones);
-        setCronograma(res.data.milestones);
+        try {
+            const res = await api.get("/api/timeline");
 
-        const formatted = res.data.eventDate
-            ? res.data.eventDate.slice(0, 16)
-            : "";
+            // 🔐 PROTEÇÃO TOTAL
+            const apiMilestones = Array.isArray(res.data?.milestones)
+                ? res.data.milestones
+                : [];
 
-        setEventDate(formatted);
+            setMilestones(apiMilestones);
+            setCronograma(apiMilestones);
+
+            // 🔐 só seta se for válida
+            if (res.data?.eventDate) {
+                setEventDate(res.data.eventDate.slice(0, 16));
+            } else {
+                setEventDate("");
+            }
+
+        } catch (err) {
+            console.error("Erro ao carregar cronograma:", err);
+            setMilestones([]);
+            setCronograma([]);
+            setEventDate("");
+        }
     };
 
     const save = async () => {
+        if (!eventDate) {
+            toast.error("Informe a data do evento");
+            return;
+        }
+
         const dataToSend = {
             eventDate: new Date(eventDate).toISOString(),
             milestones: milestones.map(m => ({
                 ...m,
-                date: new Date(m.date).toISOString()
-            }))
+                date: m.date ? new Date(m.date).toISOString() : null,
+            })),
         };
 
         await api.post("/api/timeline", dataToSend);
+        toast.success("Salvo com sucesso!");
         load();
     };
 
@@ -51,25 +73,19 @@ export const CronogramaEditor = () => {
         setMilestones([...milestones, { title: "", date: "", note: "" }]);
     };
 
-    const updateField = (i, field, value) => {
+    const updateField = (i: number, field: string, value: string) => {
         const copy = [...milestones];
-        copy[i][field] = value;
+        copy[i] = { ...copy[i], [field]: value };
         setMilestones(copy);
     };
 
-    const removeMilestone = (i) => {
+    const removeMilestone = (i: number) => {
         setMilestones(milestones.filter((_, index) => index !== i));
     };
 
-    useEffect(() => { load(); }, []);
-
-    const deletar = async (id: number) => {
-        if (!confirm("Excluir cronograma?")) return;
-        await api.delete(`/api/timeline/${id}`, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        setCronograma([]);
-    };
+    useEffect(() => {
+        load();
+    }, []);
 
     return (
         <DashboardAdmin>
@@ -92,22 +108,30 @@ export const CronogramaEditor = () => {
                     <MilestoneBox key={i}>
                         <MilestoneHeader>
                             <strong>Marco #{i + 1}</strong>
-                            <ButtonDelete onClick={() => removeMilestone(i)}>Remover</ButtonDelete>
+                            <ButtonDelete onClick={() => removeMilestone(i)}>
+                                Remover
+                            </ButtonDelete>
                         </MilestoneHeader>
 
                         <Row>
-                            <Input placeholder="Título"
+                            <Input
+                                placeholder="Título"
                                 value={m.title}
-                                onChange={(e) => updateField(i, "title", e.target.value)} />
+                                onChange={(e) => updateField(i, "title", e.target.value)}
+                            />
 
-                            <Input type="date"
-                                value={m.date}
-                                onChange={(e) => updateField(i, "date", e.target.value)} />
+                            <Input
+                                type="date"
+                                value={m.date || ""}
+                                onChange={(e) => updateField(i, "date", e.target.value)}
+                            />
                         </Row>
 
-                        <Input placeholder="Nota"
-                            value={m.note}
-                            onChange={(e) => updateField(i, "note", e.target.value)} />
+                        <Input
+                            placeholder="Nota"
+                            value={m.note || ""}
+                            onChange={(e) => updateField(i, "note", e.target.value)}
+                        />
                     </MilestoneBox>
                 ))}
 
@@ -120,26 +144,20 @@ export const CronogramaEditor = () => {
                             <th>Título</th>
                             <th>Data</th>
                             <th>Nota</th>
-                            {/* <th>Ações</th> */}
                         </tr>
                     </thead>
 
                     <tbody>
-                        {cronograma.map((e: any) => (
+                        {cronograma.map((e) => (
                             <tr key={e.id}>
                                 <td>{e.title}</td>
-                                 <td>{new Date(e.date).toLocaleDateString("pt-BR")}</td>
-                                <td>{e.note} </td>
-
-                                {/* <td>
-                                    <DeleteButton onClick={() => deletar(e.id)}>
-                                        Excluir
-                                    </DeleteButton>
-                                </td> */}
+                                <td>{new Date(e.date).toLocaleDateString("pt-BR")}</td>
+                                <td>{e.note}</td>
                             </tr>
                         ))}
                     </tbody>
                 </Table>
+
             </Container>
         </DashboardAdmin>
     );

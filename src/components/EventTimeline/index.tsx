@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     Container,
     Section,
@@ -24,8 +24,8 @@ interface EventTimelineProps {
     startDate?: string;
     milestones?: Milestone[];
     title?: string;
-    showProgressLabel?: boolean; // 👈 ADICIONADO
-
+    showProgressLabel?: boolean;
+    showOnlyDaysAndProgress?: boolean;
 }
 
 export function EventTimeline({
@@ -33,61 +33,77 @@ export function EventTimeline({
     startDate,
     milestones = [],
     title = "Evento",
-    showProgressLabel = true, // 👈 VALOR PADRÃO (MOSTRA)
+    showProgressLabel = true,
     showOnlyDaysAndProgress = false,
 }: EventTimelineProps) {
+    /** 🔐 validação centralizada da data */
+    const eventTime = useMemo(() => {
+        if (!eventDate) return NaN;
+        const time = new Date(eventDate).getTime();
+        return isNaN(time) ? NaN : time;
+    }, [eventDate]);
+
+    /** 🚨 se a data for inválida, não renderiza o contador */
+    if (isNaN(eventTime)) {
+        console.error("❌ EVENTDATE inválido:", eventDate);
+
+        return (
+            <Container>
+                <Section>
+                    <Title>{title}</Title>
+                    <DateText>Data do evento inválida</DateText>
+                </Section>
+            </Container>
+        );
+    }
 
     const [remaining, setRemaining] = useState({
-        days: 0, hours: 0, minutes: 0, seconds: 0
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
     });
 
     useEffect(() => {
         const update = () => {
-            const target = new Date(eventDate).getTime();
             const now = Date.now();
-            const diff = target - now;
-
-            if (isNaN(target)) return console.error("❌ EVENTDATE inválido:", eventDate);
+            const diff = eventTime - now;
 
             setRemaining({
-                days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-                hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-                minutes: Math.floor((diff / (1000 * 60)) % 60),
-                seconds: Math.floor((diff / 1000) % 60),
+                days: Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24))),
+                hours: Math.max(0, Math.floor((diff / (1000 * 60 * 60)) % 24)),
+                minutes: Math.max(0, Math.floor((diff / (1000 * 60)) % 60)),
+                seconds: Math.max(0, Math.floor((diff / 1000) % 60)),
             });
         };
 
         update();
         const interval = setInterval(update, 1000);
         return () => clearInterval(interval);
-    }, [eventDate]);
+    }, [eventTime]);
 
-    /** progresso visual contando desde o início do ano */
-    const progress = (() => {
+    /** 📊 progresso visual desde o início do ano */
+    const progress = useMemo(() => {
         const now = Date.now();
+        const start = new Date(new Date().getFullYear(), 0, 1).getTime();
 
-        const start = new Date(new Date().getFullYear(), 0, 1).getTime(); // 1º janeiro
-        const end = new Date(eventDate).getTime();
-
-        if (isNaN(end)) return 0;
         if (now <= start) return 0;
-        if (now >= end) return 100;
+        if (now >= eventTime) return 100;
 
-        const duration = end - start;
+        const duration = eventTime - start;
         const elapsed = now - start;
 
-        return (elapsed / duration) * 100;
-    })();
+        return Math.min(100, Math.max(0, (elapsed / duration) * 100));
+    }, [eventTime]);
 
     return (
         <Container>
-
-            {/* 🔥 MODO SIMPLIFICADO SOMENTE DIAS + PROGRESSO */}
             {showOnlyDaysAndProgress ? (
+                /* 🔥 MODO SIMPLIFICADO */
                 <Section style={{ textAlign: "center" }}>
-
                     <Countdown style={{ fontSize: "26px", fontWeight: "bold" }}>
-                        Faltam {remaining.days}d {remaining.hours}h {remaining.minutes}m {remaining.seconds}s
+                        Faltam {remaining.days}d {remaining.hours}h {remaining.minutes}m{" "}
+                        {remaining.seconds}s
                     </Countdown>
 
                     <ProgressBar>
@@ -109,20 +125,21 @@ export function EventTimeline({
                     </ProgressBar>
 
                     <DateText style={{ marginTop: "8px", fontSize: "14px", opacity: 0.8 }}>
-                        Data do evento: {new Date(eventDate).toLocaleDateString("pt-BR")}
+                        Data do evento:{" "}
+                        {new Date(eventTime).toLocaleDateString("pt-BR")}
                     </DateText>
-
                 </Section>
             ) : (
                 <>
-                    {/* 🔹 Layout original completo */}
+                    {/* 🔹 Layout completo */}
                     <Section>
                         <Title>{title}</Title>
 
                         <Label>Contagem regressiva</Label>
 
                         <Countdown>
-                            Faltam {remaining.days}d {remaining.hours}h {remaining.minutes}m {remaining.seconds}s
+                            Faltam {remaining.days}d {remaining.hours}h {remaining.minutes}m{" "}
+                            {remaining.seconds}s
                         </Countdown>
 
                         <ProgressBar>
@@ -146,17 +163,19 @@ export function EventTimeline({
                         </ProgressBar>
 
                         <DateText>
-                            Data do evento: {new Date(eventDate).toLocaleDateString("pt-BR")}
+                            Data do evento:{" "}
+                            {new Date(eventTime).toLocaleDateString("pt-BR")}
                         </DateText>
                     </Section>
 
-                    {milestones.length > 0 && (
+                    {Array.isArray(milestones) && milestones.length > 0 && (
                         <Section>
                             <Label>📍 Linha do Tempo</Label>
                             <MilestoneList>
-                                {milestones.map(m => (
+                                {milestones.map((m) => (
                                     <MilestoneItem key={m.id}>
-                                        <strong>{m.title}</strong> — {new Date(m.date).toLocaleDateString("pt-BR")}
+                                        <strong>{m.title}</strong> —{" "}
+                                        {new Date(m.date).toLocaleDateString("pt-BR")}
                                         <br />
                                         <small>{m.note}</small>
                                     </MilestoneItem>
@@ -166,8 +185,6 @@ export function EventTimeline({
                     )}
                 </>
             )}
-
         </Container>
     );
-
 }

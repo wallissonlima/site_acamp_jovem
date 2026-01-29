@@ -10,12 +10,20 @@ export const Cronograma = () => {
     const [eventDate, setEventDate] = useState("");
 
     const loadTimeline = async () => {
-        const res = await api.get("/api/timeline");
-        setMilestones(res.data.milestones);
-        setEventDate(res.data.eventDate);
+        try {
+            const res = await api.get("/api/timeline");
+
+            // Certifica que o valor existe
+            setMilestones(res.data.milestones ?? []);
+            setEventDate(res.data.eventDate ?? null);
+
+        } catch (err) {
+            console.error("Erro ao carregar timeline:", err);
+            setMilestones([]);
+            setEventDate(null);
+        }
     };
 
-    useEffect(() => { loadTimeline(); }, []);
     useEffect(() => {
         loadTimeline();
     }, []);
@@ -30,11 +38,16 @@ export const Cronograma = () => {
         <>
             <Header />
             <Content>
-                <EventTimeline
-                    eventDate={eventDate}
-                    title="Contagem Regressiva para o Evento"
-                    milestones={milestones}
-                />
+                {/* Renderiza somente se eventDate existir */}
+                {eventDate ? (
+                    <EventTimeline
+                        eventDate={eventDate}
+                        title="Contagem Regressiva para o Evento"
+                        milestones={milestones}
+                    />
+                ) : (
+                    <p>Carregando cronograma...</p>
+                )}
             </Content>
             <div style={{ marginTop: "11%" }}>
 

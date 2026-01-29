@@ -31,18 +31,26 @@ export const CarouselEditor: React.FC = () => {
 
     // Função para carregar itens do backend
     const load = async () => {
-        const res = await api.get("/api/carousel"); // Chamada GET
-        const mapped = res.data.map((i: any) => ({
+        const res = await api.get("/api/carousel");
+
+        const list = Array.isArray(res.data)
+            ? res.data
+            : res.data.items ?? res.data.carousel ?? [];
+
+        const mapped = list.map((i: any) => ({
             id: i.id,
             altText: i.altText,
-            // Se o backend retorna Base64, já montamos o src correto
-            src: i.imageBase64 ? `data:${i.mimeType};base64,${i.imageBase64}` : "",
+            src: i.imageBase64
+                ? `data:${i.mimeType};base64,${i.imageBase64}`
+                : "",
             sortOrder: i.sortOrder,
             isNew: false,
             newImage: null,
         }));
-        setItems(mapped); // Atualiza estado
+
+        setItems(mapped);
     };
+
 
     // Carregar os itens assim que o componente monta
     useEffect(() => { load(); }, []);
@@ -139,7 +147,7 @@ export const CarouselEditor: React.FC = () => {
                 <ButtonAdd onClick={addItem}>+ Adicionar Banner</ButtonAdd>
 
                 <Grid>
-                    {items.map((item) => {
+                    {Array.isArray(items) && items.map(item => {
                         const key = (item.id ?? item.tempId) as any;
                         return (
                             <ItemCard key={key}>

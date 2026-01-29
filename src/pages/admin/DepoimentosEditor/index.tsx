@@ -22,8 +22,17 @@ export const DepoimentosEditor = () => {
 
     const loadDepoimentos = async () => {
         const res = await api.get("/api/depoimentos");
-        setDepoimentos(res.data);
+
+        const depoArray = Array.isArray(res.data)
+            ? res.data
+            : Array.isArray(res.data.depoimentos)
+                ? res.data.depoimentos
+                : [];
+
+        setDepoimentos(depoArray);
     };
+
+
 
     const salvarNovo = async () => {
         if (!novoTexto.trim()) return alert("Digite o depoimento");
@@ -59,7 +68,7 @@ export const DepoimentosEditor = () => {
                 </AddBox>
 
                 <List>
-                    {depoimentos.length > 0 ? (
+                    {Array.isArray(depoimentos) && depoimentos.length > 0 ? (
                         depoimentos.map(d => (
                             <ItemCard key={d.id}>
                                 <TextArea

@@ -63,12 +63,12 @@ export const Home = () => {
     const [showPayment, setShowPayment] = useState(false);
 
     useEffect(() => {
-        // 🔹 Carrega conteúdo da página Home
+        // 🔹 Conteúdo Home
         api.get('/api/content', { params: { page: 'home' } })
             .then(r => {
                 const data = Array.isArray(r.data)
                     ? r.data.reduce((acc: any, item: any) => {
-                        acc[item.key] = { id: item.id, ...item }; // pega title, description também
+                        acc[item.key] = { id: item.id, ...item };
                         return acc;
                     }, {})
                     : r.data || {};
@@ -77,13 +77,34 @@ export const Home = () => {
             })
             .catch(() => { });
 
-        // 🔹 Eventos
-        api.get("/api/eventos").then(res => setEventos(res.data)).catch(err => console.log(err));
+        // 🔹 Eventos (CORREÇÃO AQUI 👇)
+        api.get("/api/eventos")
+            .then(res => {
+                const eventosArray = Array.isArray(res.data)
+                    ? res.data
+                    : Array.isArray(res.data.eventos)
+                        ? res.data.eventos
+                        : [];
+                setEventos(eventosArray);
+            })
+            .catch(err => console.log(err));
+
 
         // 🔹 Depoimentos
-        api.get('/api/depoimentos').then(r => setDepoimentos(r.data)).catch(() => { });
+        api.get('/api/depoimentos')
+            .then(r => {
+                const depoArray = Array.isArray(r.data)
+                    ? r.data
+                    : Array.isArray(r.data.depoimentos)
+                        ? r.data.depoimentos
+                        : [];
+                setDepoimentos(depoArray);
+            })
+            .catch(() => setDepoimentos([]));
+
 
     }, []);
+
 
     // helper para acessar valor de conteúdo
     const value = (key: string, fallback = '') => content[key]?.value ?? fallback;
@@ -151,10 +172,12 @@ export const Home = () => {
             <Header />
             <Content>
                 <CustomCarousel />
-                <EventTimeline
-                    eventDate={eventDate}
-                    showOnlyDaysAndProgress={true}
-                />
+                {eventDate && (
+                    <EventTimeline
+                        eventDate={eventDate}
+                        showOnlyDaysAndProgress={true}
+                    />
+                )}
 
                 {/* Seção Eventos */}
                 <Section id="eventos">
@@ -244,7 +267,7 @@ export const Home = () => {
                     <h1>{value('depoimentos_title', 'Depoimentos')}</h1>
 
                     <DepoiContent>
-                        {depoimentos?.length > 0 ? (
+                        {Array.isArray(depoimentos) && depoimentos.length > 0 ? (
                             depoimentos.map(d => (
                                 <p key={d.id}>{d.texto}</p>
                             ))
