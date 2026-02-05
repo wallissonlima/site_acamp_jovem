@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import api from "../../config/api"; // ajuste caminho
 import styled from "styled-components";
+import api from "../../../config/api";
 
 const Form = styled.form`
   max-width: 900px;

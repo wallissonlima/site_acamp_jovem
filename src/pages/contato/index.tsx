@@ -1,7 +1,6 @@
 import { Input, Label } from "reactstrap";
 import { Header } from "../../components/Header"
 import { Context, CustomButton, CustomDiv, CustomForm } from "./styles";
-import { Footer } from "../../components/footer";
 import { useRef } from "react";
 
 export const Contato = () => {

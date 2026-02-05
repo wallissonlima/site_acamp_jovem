@@ -97,30 +97,6 @@ export const FromCotainer = styled.div`
       color: #581c87;
     }
   }
-
-  button {
-    width: 100%;
-    max-width: 140px;
-    padding: 12px;
-    margin: 0 auto;
-    font-size: 1.2em;
-    background: ${(props) => props.theme["purple-400"]};
-    color: ${(props) => props.theme.white};
-    font-weight: bold;
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: 0.2s;
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    &:not(:disabled):hover {
-      /* background: ${(props) => props.theme["purple-500"]}; */
-    }
-  }
 `;
 
 export const CustomSenha = styled.div`
@@ -166,24 +142,34 @@ export const CustonCheck = styled.div`
   }
 `;
 
-export const CustomButton = styled.div`
+export const CustomButton = styled.button`
   display: flex;
+  width: 100%;
+  max-width: 120px;
   justify-content: center;
   align-items: center;
+  background-color: transparent;
+  color: ${(props) => props.theme.white};
   border: 2px solid ${(props) => props.theme["purple-500"]};
   border-radius: 12px;
+  font-size: 1.2em;
+  font-weight: bold;
   padding: 8px 16px;
   cursor: pointer;
   transition: all 0.2s;
   margin: 0 auto;
   height: 40px;
+  
+
+  
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
 
   &:hover {
     background-color: ${(props) => props.theme["purple-300"]};
     border-color: ${(props) => props.theme["purple-600"]};
-  }
-  .button1{
-    background: transparent;
   }
 `;
 

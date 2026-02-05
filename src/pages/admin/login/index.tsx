@@ -106,8 +106,8 @@ export const LoginAdmin = () => {
                         </span>
                     </div>
 
-                    <CustomButton>
-                        <button className="button1" type="submit">Entrar</button>
+                    <CustomButton type="submit">
+                        Entrar
                     </CustomButton>
                 </form>
             </FromCotainer>
