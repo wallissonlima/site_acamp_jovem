@@ -2,6 +2,7 @@ import React, { useState, forwardRef } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { CustomDiv, CustomForm } from "./styles";
+import { formularioServosService } from "../../services/formularioServos";
 
 /* 🔹 Props */
 interface FormServosProps {
@@ -44,17 +45,11 @@ export const FormServos = forwardRef<HTMLFormElement, FormServosProps>(
             e.preventDefault();
 
             try {
-                const check = await axios.get(
-                    `http://localhost:3000/api/formularioServos/exists-cpf/${formData.cpf}`
-                );
-
-                if (check.data.exists) {
-                    toast.error("Este CPF já está cadastrado!");
-                    return;
-                }
-                await axios.post("http://localhost:3000/api/formularioServos", {
-                    tipo: "SERVO",
-                    ...formData,
+                await formularioServosService.criarInscricao({
+                    name: formData.name,
+                    email: formData.email,
+                    cpf: formData.cpf,
+                    nomeCredencial: formData.nomeCredencial,
                     telefone: formData.telefone || null,
                     tamanhoCamiseta: formData.tamanhoCamiseta || null,
                     alergiaRestricao: formData.alergiaRestricao || null,
@@ -74,9 +69,9 @@ export const FormServos = forwardRef<HTMLFormElement, FormServosProps>(
                     alergiaRestricao: "",
                     descricao: "",
                 });
-            } catch (err) {
-                console.error(err);
-                toast.error("Erro ao enviar inscrição.");
+
+            } catch (error: any) {
+                toast.error(error.message || "Erro ao enviar inscrição.");
             }
         };
 

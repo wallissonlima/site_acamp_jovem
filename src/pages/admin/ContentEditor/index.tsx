@@ -10,8 +10,9 @@ import {
     SectionTitle,
     SectionButton,
 } from "./styles";
-import axios from "axios";
 import { toast } from "react-toastify";
+import { adminService } from "../../../services/admin";
+
 
 function formatCurrency(value: number) {
     return value.toLocaleString("pt-BR", {
@@ -19,7 +20,6 @@ function formatCurrency(value: number) {
         currency: "BRL",
     });
 }
-
 
 export function ContentEditor() {
     const [limiteParticipantes, setLimiteParticipantes] = useState(0);
@@ -32,67 +32,54 @@ export function ContentEditor() {
     const [totalParticipantes, setTotalParticipantes] = useState(0);
     const [totalServos, setTotalServos] = useState(0);
 
-    const [valoresCarregados, setValoresCarregados] = useState(false);
-
-
     // 🔹 Buscar status
     useEffect(() => {
         async function carregarStatus() {
             try {
-                const response = await axios.get(
-                    "http://localhost:3000/api/limite-inscricao/status"
-                );
+                const data = await adminService.buscarStatus();
 
-                setLimiteParticipantes(response.data.limiteParticipantes ?? 0);
-                setLimiteServos(response.data.limiteServos ?? 0);
-
-                setTotalParticipantes(response.data.totalParticipantes ?? 0);
-                setTotalServos(response.data.totalServos ?? 0);
-
-                setAtivo(response.data.ativo ?? true);
+                setLimiteParticipantes(data.limiteParticipantes ?? 0);
+                setLimiteServos(data.limiteServos ?? 0);
+                setTotalParticipantes(data.totalParticipantes ?? 0);
+                setTotalServos(data.totalServos ?? 0);
+                setAtivo(data.ativo ?? true);
             } catch (error) {
                 console.error("Erro ao carregar status", error);
+                toast.error("Erro ao carregar status");
             }
         }
 
         carregarStatus();
     }, []);
 
-
-    // 🔹 Buscar valores da inscrição
+    // 🔹 Buscar valores
     useEffect(() => {
         async function carregarValores() {
             try {
-                const response = await axios.get(
-                    "http://localhost:3000/api/valor-incricao"
-                );
+                const data = await adminService.buscarValores();
 
-                setValorParticipantes(response.data.priceParticipante ?? 0);
-                setValorServos(response.data.priceServo ?? 0);
-
-                setValoresCarregados(true);
+                setValorParticipantes(data.priceParticipante ?? 0);
+                setValorServos(data.priceServo ?? 0);
             } catch (error) {
                 console.error("Erro ao carregar valores", error);
-                setValoresCarregados(false);
+                toast.error("Erro ao carregar valores");
             }
         }
 
         carregarValores();
     }, []);
 
-
-    //salvar limites
     async function salvarLimites() {
         try {
             setLoading(true);
 
-            await axios.put("http://localhost:3000/api/limite-inscricao", {
+            await adminService.salvarLimites({
                 limiteParticipantes,
                 limiteServos,
                 ativo,
             });
 
-            toast("Configurações salvas com sucesso!");
+            toast.success("Configurações salvas com sucesso!");
         } catch (error) {
             toast.error("Erro ao salvar configurações");
         } finally {
@@ -100,22 +87,22 @@ export function ContentEditor() {
         }
     }
 
-    //salvar valores
     async function salvarValores() {
         try {
+            setLoading(true);
 
-            await axios.put("http://localhost:3000/api/valor-incricao", {
+            await adminService.salvarValores({
                 priceParticipante: valorParticipantes,
                 priceServo: valorServos,
             });
-            toast("Valores salvos com sucesso!");
+
+            toast.success("Valores salvos com sucesso!");
         } catch (error) {
-            toast.error("Erro ao salvar Valores");
+            toast.error("Erro ao salvar valores");
         } finally {
             setLoading(false);
         }
     }
-
 
     return (
         <DashboardAdmin>
@@ -124,34 +111,27 @@ export function ContentEditor() {
 
                 <FormCard>
                     <div>
-
-                        {/* STATUS PARTICIPANTES */}
                         <p>
-                            <strong>Participantes:</strong>{" "}
-                            {totalParticipantes}
-                            {limiteParticipantes > 0 && ` / ${limiteParticipantes}`}
+                            <strong>Participantes:</strong> {totalParticipantes}
+                            {limiteParticipantes > 0 &&
+                                ` / ${limiteParticipantes}`}
                         </p>
 
-                        {/* STATUS SERVOS */}
                         <p>
-                            <strong>Servos:</strong>{" "}
-                            {totalServos}
+                            <strong>Servos:</strong> {totalServos}
                             {limiteServos > 0 && ` / ${limiteServos}`}
                         </p>
-
                     </div>
-                    <div>
 
-                        {/* VALOR PARTICIPANTES */}
+                    <div>
                         <p>
                             <strong>Valor Participantes:</strong>{" "}
-                            R$ {formatCurrency(valorParticipantes)}
+                            {formatCurrency(valorParticipantes)}
                         </p>
 
-                        {/* VALOR SERVOS */}
                         <p>
                             <strong>Valor Servos:</strong>{" "}
-                            R$ {formatCurrency(valorServos)}
+                            {formatCurrency(valorServos)}
                         </p>
                     </div>
 
@@ -173,7 +153,9 @@ export function ContentEditor() {
                             <input
                                 type="number"
                                 value={limiteParticipantes}
-                                onChange={(e) => setLimiteParticipantes(+e.target.value)}
+                                onChange={(e) =>
+                                    setLimiteParticipantes(Number(e.target.value))
+                                }
                             />
                         </Field>
 
@@ -182,12 +164,14 @@ export function ContentEditor() {
                             <input
                                 type="number"
                                 value={limiteServos}
-                                onChange={(e) => setLimiteServos(+e.target.value)}
+                                onChange={(e) =>
+                                    setLimiteServos(Number(e.target.value))
+                                }
                             />
                         </Field>
 
                         <SectionButton onClick={salvarLimites} disabled={loading}>
-                            Salvar limites
+                            {loading ? "Salvando..." : "Salvar limites"}
                         </SectionButton>
                     </Section>
 
@@ -201,8 +185,7 @@ export function ContentEditor() {
                                 type="text"
                                 value={formatCurrency(valorParticipantes)}
                                 onChange={(e) => {
-                                    const numericValue = e.target.value
-                                        .replace(/\D/g, "");
+                                    const numericValue = e.target.value.replace(/\D/g, "");
                                     setValorParticipantes(Number(numericValue) / 100);
                                 }}
                             />
@@ -214,16 +197,14 @@ export function ContentEditor() {
                                 type="text"
                                 value={formatCurrency(valorServos)}
                                 onChange={(e) => {
-                                    const numericValue = e.target.value
-                                        .replace(/\D/g, "");
+                                    const numericValue = e.target.value.replace(/\D/g, "");
                                     setValorServos(Number(numericValue) / 100);
                                 }}
                             />
                         </Field>
 
-
-                        <SectionButton onClick={salvarValores}>
-                            Salvar valores
+                        <SectionButton onClick={salvarValores} disabled={loading}>
+                            {loading ? "Salvando..." : "Salvar valores"}
                         </SectionButton>
                     </Section>
                 </FormCard>

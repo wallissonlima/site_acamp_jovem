@@ -1,21 +1,15 @@
-import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { PayButton, PaymentContainer, WalletBox } from './styles';
-import { CreditCard } from 'phosphor-react';
+import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
+import { useEffect, useState } from "react";
+import { PayButton, PaymentContainer, WalletBox } from "./styles";
+import { CreditCard } from "phosphor-react";
+import { paymentService, type TipoInscricao } from "../../../services/payment";
 
-// 🔹 Inicializa UMA VEZ
-initMercadoPago("APP_USR-30b149d7-414b-4fde-9651-3487835da6dc");
 
-type TipoInscricao = 'PARTICIPANTE' | 'SERVO';
+// 🔹 Inicializa com variável de ambiente
+initMercadoPago(import.meta.env.VITE_APP_MP_PUBLIC_KEY);
 
 interface Props {
     tipo: TipoInscricao;
-}
-
-interface ValoresResponse {
-    priceParticipante: number;
-    priceServo: number;
 }
 
 const formatBRL = (value: number) =>
@@ -29,18 +23,20 @@ export function MercadoPagoButton({ tipo }: Props) {
     const [loading, setLoading] = useState(false);
     const [valor, setValor] = useState<number | null>(null);
 
-    // 🔹 Buscar valores ao carregar
+    // 🔹 Buscar valores
     useEffect(() => {
         async function carregarValores() {
-            const response = await axios.get<ValoresResponse>(
-                "http://localhost:3000/api/valor-incricao"
-            );
+            try {
+                const response = await paymentService.buscarValores();
 
-            setValor(
-                tipo === 'SERVO'
-                    ? response.data.priceServo
-                    : response.data.priceParticipante
-            );
+                setValor(
+                    tipo === "SERVO"
+                        ? response.priceServo
+                        : response.priceParticipante
+                );
+            } catch (error) {
+                console.error("Erro ao buscar valores:", error);
+            }
         }
 
         carregarValores();
@@ -50,15 +46,11 @@ export function MercadoPagoButton({ tipo }: Props) {
         try {
             setLoading(true);
 
-            const response = await axios.post(
-                "http://localhost:3000/api/payments/pagamento",
-                {
-                    tipo,
-                    valor, // 👈 envia o valor correto
-                }
-            );
+            if (!valor) return;
 
-            setPreferenceId(response.data.preferenceId);
+            const response = await paymentService.criarPagamento(tipo, valor);
+
+            setPreferenceId(response.preferenceId);
         } catch (error) {
             console.error("Erro ao criar pagamento:", error);
         } finally {
