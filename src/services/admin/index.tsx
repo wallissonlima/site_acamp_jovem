@@ -1,6 +1,5 @@
 import api from "../../config/api";
 
-
 interface StatusResponse {
     limiteParticipantes: number;
     limiteServos: number;

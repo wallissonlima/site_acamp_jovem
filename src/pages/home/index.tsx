@@ -32,6 +32,7 @@ import { MercadoPagoButton } from "../admin/ButtonPago";
 import { EventTimeline } from "../../components/EventTimeline";
 import { FormServos } from "../../operaction/formServos/indesx";
 import axios from "axios";
+import { adminService } from "../../services/admin";
 
 function limitarTexto(texto: string, limite = 60) {
     if (!texto) return '';
@@ -137,19 +138,17 @@ export const Home = () => {
     useEffect(() => {
         async function carregarDados() {
             try {
-                const response = await axios.get(
-                    "http://localhost:3000/api/limite-inscricao/status"
-                );
+                const data = await adminService.buscarStatus();
 
-                console.log("STATUS API:", response.data);
+                console.log("STATUS API:", data);
 
                 // PARTICIPANTES
-                setLimiteVagas(response.data.limiteParticipantes);
-                setTotalInscritos(response.data.totalParticipantes);
+                setLimiteVagas(data.limiteParticipantes ?? 0);
+                setTotalInscritos(data.totalParticipantes ?? 0);
 
-                // SERVOS 👇 (ESTAVA FALTANDO)
-                setLimiteServos(response.data.limiteServos);
-                setTotalServos(response.data.totalServos);
+                // SERVOS
+                setLimiteServos(data.limiteServos ?? 0);
+                setTotalServos(data.totalServos ?? 0);
 
             } catch (error) {
                 console.error("Erro ao carregar status", error);
