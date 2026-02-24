@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Context, CustomButton, FromCotainer } from "./styles";
-import logo from "../../../assets/logo1.png";
+import logo from "../../../assets/log1.png";
 import uri_header from '../../../config/uri_header.json';
 
 interface iUser {

@@ -5,13 +5,14 @@ export const Context = styled.div`
   width: 100%;
   min-height: 100vh;
   padding: 100px;
-  background: ${(props) => props.theme["gray-500"]};
+  background: ${(props) => props.theme["gray-600"]};
   display: flex;
   flex-direction: column;
   z-index: 1;
 
   img {
-    width: 50%;
+    margin-top: -35px;
+    width: 60%;
     @media (max-width: 1024px) {
       width: 30%;
     }
