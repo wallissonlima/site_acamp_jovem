@@ -26,7 +26,12 @@ export function Router() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        style={{ width: '30%', marginTop: '60px', textAlign: 'center', zIndex: 3500 }}
+        style={{
+          width: "30%",
+          marginTop: "60px",
+          textAlign: "center",
+          zIndex: 3500,
+        }}
       />
 
       <Routes>
@@ -36,23 +41,77 @@ export function Router() {
         <Route path="/home" element={<Home />} />
         <Route path="/cronograma" element={<Cronograma />} />
         <Route path="/contato" element={<Contato />} />
-
-        {/* ROTAS DO ADMIN */}
-        <Route path="/admin/home" element={<HomeEditor />} />
         <Route path="/admin/login" element={<LoginAdmin />} />
-        <Route path="/admin/eventos" element={<EventosEditor />} />
-        <Route path="/admin/cronograma" element={<CronogramaEditor />} />
-        <Route path="/admin/depoimentos" element={<DepoimentosEditor />} />
-        <Route path="/admin/config" element={<ConfigAdmin />} />
-        <Route path="/admin/configInscricoes" element={<ContentEditor />} />
-        <Route path="/admin/exports" element={<ExportaFormulario />} />
-        <Route path="/admin/exportsServos" element={<ExportaServos />} />
 
+        {/* ROTAS PROTEGIDAS DO ADMIN */}
         <Route
           path="/admin/home"
           element={
             <ProtectedRoute>
               <HomeEditor />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/eventos"
+          element={
+            <ProtectedRoute>
+              <EventosEditor />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/cronograma"
+          element={
+            <ProtectedRoute>
+              <CronogramaEditor />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/depoimentos"
+          element={
+            <ProtectedRoute>
+              <DepoimentosEditor />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/config"
+          element={
+            <ProtectedRoute>
+              <ConfigAdmin />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/configInscricoes"
+          element={
+            <ProtectedRoute>
+              <ContentEditor />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/exports"
+          element={
+            <ProtectedRoute>
+              <ExportaFormulario />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/exportsServos"
+          element={
+            <ProtectedRoute>
+              <ExportaServos />
             </ProtectedRoute>
           }
         />

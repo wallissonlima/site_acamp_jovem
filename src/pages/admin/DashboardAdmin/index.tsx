@@ -1,26 +1,37 @@
 import { SignOut } from "phosphor-react";
-import { Container, Sidebar, Title, Button, ButtonDanger, PageArea } from "./styles";
+import {
+  Container,
+  Sidebar,
+  Title,
+  Button,
+  ButtonDanger,
+  PageArea,
+} from "./styles";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
-export function DashboardAdmin({ children }: { children: React.ReactNode }) {
+export function DashboardAdmin({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const navigate = useNavigate();
-  const location = useLocation(); // pega a rota atual
+  const location = useLocation();
 
   function handleLogout() {
     localStorage.removeItem("token");
-    navigate("/admin/login");
+    navigate("/admin/login", { replace: true });
   }
 
+  // Redireciona se acessar /admin direto
   useEffect(() => {
     if (location.pathname === "/admin") {
-      navigate("/admin/home");
+      navigate("/admin/home", { replace: true });
     }
   }, [location.pathname, navigate]);
 
   return (
     <Container>
-      {/* SIDEBAR */}
       <Sidebar>
         <Title>Painel Admin</Title>
 
@@ -44,12 +55,14 @@ export function DashboardAdmin({ children }: { children: React.ReactNode }) {
         >
           Cronogramas
         </Button>
+
         <Button
           active={location.pathname === "/admin/eventos"}
           onClick={() => navigate("/admin/eventos")}
         >
           Eventos
         </Button>
+
         <Button
           active={location.pathname === "/admin/depoimentos"}
           onClick={() => navigate("/admin/depoimentos")}
@@ -63,12 +76,14 @@ export function DashboardAdmin({ children }: { children: React.ReactNode }) {
         >
           Configuração inscrições
         </Button>
+
         <Button
           active={location.pathname === "/admin/exports"}
           onClick={() => navigate("/admin/exports")}
         >
           Exporta participantes
         </Button>
+
         <Button
           active={location.pathname === "/admin/exportsServos"}
           onClick={() => navigate("/admin/exportsServos")}
@@ -76,7 +91,9 @@ export function DashboardAdmin({ children }: { children: React.ReactNode }) {
           Exporta servos
         </Button>
 
-        <ButtonDanger onClick={handleLogout}><SignOut size={15} /> Sair</ButtonDanger>
+        <ButtonDanger onClick={handleLogout}>
+          <SignOut size={15} /> Sair
+        </ButtonDanger>
       </Sidebar>
 
       <PageArea>{children}</PageArea>
