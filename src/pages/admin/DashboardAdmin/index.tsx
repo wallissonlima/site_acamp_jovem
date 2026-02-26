@@ -9,26 +9,45 @@ import {
 } from "./styles";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { Outlet } from "react-router-dom"
 
-export function DashboardAdmin({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function DashboardAdmin() {
   const navigate = useNavigate();
   const location = useLocation();
 
   function handleLogout() {
-    localStorage.removeItem("token");
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("admin");
+
     navigate("/admin/login", { replace: true });
   }
 
-  // Redireciona se acessar /admin direto
   useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    const admin = localStorage.getItem("admin");
+
+    if (!token || !admin) {
+      navigate("/admin/login", { replace: true });
+      return;
+    }
+
     if (location.pathname === "/admin") {
       navigate("/admin/home", { replace: true });
     }
   }, [location.pathname, navigate]);
+
+  useEffect(() => {
+    window.history.pushState(null, "", window.location.href);
+
+    window.onpopstate = function () {
+      const token = localStorage.getItem("access_token");
+      const admin = localStorage.getItem("admin");
+
+      if (!token || !admin) {
+        navigate("/admin/login", { replace: true });
+      }
+    };
+  }, [navigate]);
 
   return (
     <Container>
@@ -96,7 +115,7 @@ export function DashboardAdmin({
         </ButtonDanger>
       </Sidebar>
 
-      <PageArea>{children}</PageArea>
+      <PageArea><Outlet /></PageArea>
     </Container>
   );
 }

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { DashboardAdmin } from "../DashboardAdmin";
 import {
     Container,
     FormCard,
@@ -105,110 +104,109 @@ export function ContentEditor() {
     }
 
     return (
-        <DashboardAdmin>
-            <Container>
-                <Header>Configurações das Inscrições</Header>
 
-                <FormCard>
-                    <div>
-                        <p>
-                            <strong>Participantes:</strong> {totalParticipantes}
-                            {limiteParticipantes > 0 &&
-                                ` / ${limiteParticipantes}`}
-                        </p>
+        <Container>
+            <Header>Configurações das Inscrições</Header>
 
-                        <p>
-                            <strong>Servos:</strong> {totalServos}
-                            {limiteServos > 0 && ` / ${limiteServos}`}
-                        </p>
-                    </div>
+            <FormCard>
+                <div>
+                    <p>
+                        <strong>Participantes:</strong> {totalParticipantes}
+                        {limiteParticipantes > 0 &&
+                            ` / ${limiteParticipantes}`}
+                    </p>
 
-                    <div>
-                        <p>
-                            <strong>Valor Participantes:</strong>{" "}
-                            {formatCurrency(valorParticipantes)}
-                        </p>
+                    <p>
+                        <strong>Servos:</strong> {totalServos}
+                        {limiteServos > 0 && ` / ${limiteServos}`}
+                    </p>
+                </div>
 
-                        <p>
-                            <strong>Valor Servos:</strong>{" "}
-                            {formatCurrency(valorServos)}
-                        </p>
-                    </div>
+                <div>
+                    <p>
+                        <strong>Valor Participantes:</strong>{" "}
+                        {formatCurrency(valorParticipantes)}
+                    </p>
 
-                    <CheckboxRow>
+                    <p>
+                        <strong>Valor Servos:</strong>{" "}
+                        {formatCurrency(valorServos)}
+                    </p>
+                </div>
+
+                <CheckboxRow>
+                    <input
+                        type="checkbox"
+                        checked={ativo}
+                        onChange={(e) => setAtivo(e.target.checked)}
+                    />
+                    Inscrições ativas
+                </CheckboxRow>
+
+                {/* 🔹 LIMITES */}
+                <Section>
+                    <SectionTitle>Limites</SectionTitle>
+
+                    <Field>
+                        <label>Limite participantes</label>
                         <input
-                            type="checkbox"
-                            checked={ativo}
-                            onChange={(e) => setAtivo(e.target.checked)}
+                            type="number"
+                            value={limiteParticipantes}
+                            onChange={(e) =>
+                                setLimiteParticipantes(Number(e.target.value))
+                            }
                         />
-                        Inscrições ativas
-                    </CheckboxRow>
+                    </Field>
 
-                    {/* 🔹 LIMITES */}
-                    <Section>
-                        <SectionTitle>Limites</SectionTitle>
+                    <Field>
+                        <label>Limite servos</label>
+                        <input
+                            type="number"
+                            value={limiteServos}
+                            onChange={(e) =>
+                                setLimiteServos(Number(e.target.value))
+                            }
+                        />
+                    </Field>
 
-                        <Field>
-                            <label>Limite participantes</label>
-                            <input
-                                type="number"
-                                value={limiteParticipantes}
-                                onChange={(e) =>
-                                    setLimiteParticipantes(Number(e.target.value))
-                                }
-                            />
-                        </Field>
+                    <SectionButton onClick={salvarLimites} disabled={loading}>
+                        {loading ? "Salvando..." : "Salvar limites"}
+                    </SectionButton>
+                </Section>
 
-                        <Field>
-                            <label>Limite servos</label>
-                            <input
-                                type="number"
-                                value={limiteServos}
-                                onChange={(e) =>
-                                    setLimiteServos(Number(e.target.value))
-                                }
-                            />
-                        </Field>
+                {/* 🔹 VALORES */}
+                <Section>
+                    <SectionTitle>Valores</SectionTitle>
 
-                        <SectionButton onClick={salvarLimites} disabled={loading}>
-                            {loading ? "Salvando..." : "Salvar limites"}
-                        </SectionButton>
-                    </Section>
+                    <Field>
+                        <label>Valor participantes</label>
+                        <input
+                            type="text"
+                            value={formatCurrency(valorParticipantes)}
+                            onChange={(e) => {
+                                const numericValue = e.target.value.replace(/\D/g, "");
+                                setValorParticipantes(Number(numericValue) / 100);
+                            }}
+                        />
+                    </Field>
 
-                    {/* 🔹 VALORES */}
-                    <Section>
-                        <SectionTitle>Valores</SectionTitle>
+                    <Field>
+                        <label>Valor servos</label>
+                        <input
+                            type="text"
+                            value={formatCurrency(valorServos)}
+                            onChange={(e) => {
+                                const numericValue = e.target.value.replace(/\D/g, "");
+                                setValorServos(Number(numericValue) / 100);
+                            }}
+                        />
+                    </Field>
 
-                        <Field>
-                            <label>Valor participantes</label>
-                            <input
-                                type="text"
-                                value={formatCurrency(valorParticipantes)}
-                                onChange={(e) => {
-                                    const numericValue = e.target.value.replace(/\D/g, "");
-                                    setValorParticipantes(Number(numericValue) / 100);
-                                }}
-                            />
-                        </Field>
-
-                        <Field>
-                            <label>Valor servos</label>
-                            <input
-                                type="text"
-                                value={formatCurrency(valorServos)}
-                                onChange={(e) => {
-                                    const numericValue = e.target.value.replace(/\D/g, "");
-                                    setValorServos(Number(numericValue) / 100);
-                                }}
-                            />
-                        </Field>
-
-                        <SectionButton onClick={salvarValores} disabled={loading}>
-                            {loading ? "Salvando..." : "Salvar valores"}
-                        </SectionButton>
-                    </Section>
-                </FormCard>
-            </Container>
-        </DashboardAdmin>
+                    <SectionButton onClick={salvarValores} disabled={loading}>
+                        {loading ? "Salvando..." : "Salvar valores"}
+                    </SectionButton>
+                </Section>
+            </FormCard>
+        </Container>
     );
 }

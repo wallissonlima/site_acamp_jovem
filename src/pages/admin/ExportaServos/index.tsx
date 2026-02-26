@@ -1,4 +1,3 @@
-import { DashboardAdmin } from "../DashboardAdmin";
 import { BackButton, ButtonEditor, Container, DeleteButton, Header, Table } from "./styles";
 import { useState, useEffect } from "react";
 import api from "../../../config/api";
@@ -97,51 +96,49 @@ export const ExportaServos = () => {
     }, []);
 
     return (
-        <DashboardAdmin>
-            <Container>
-                <Header>
-                    <h2>
-                        Exporta Formulário Servos
-                    </h2>
-                    <ButtonEditor>
-                        <div>
-                            <BackButton onClick={exportToExcel}>Exporta</BackButton>
-                        </div>
-                        {/* <div>
+        <Container>
+            <Header>
+                <h2>
+                    Exporta Formulário Servos
+                </h2>
+                <ButtonEditor>
+                    <div>
+                        <BackButton onClick={exportToExcel}>Exporta</BackButton>
+                    </div>
+                    {/* <div>
                             <DeleteButton onClick={deletarTudo}>Limpa o banco</DeleteButton>
                         </div> */}
-                    </ButtonEditor>
-                </Header>
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Email</th>
-                            <th>CPF</th>
-                            <th>Nome Credencial</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
+                </ButtonEditor>
+            </Header>
+            <Table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>CPF</th>
+                        <th>Nome Credencial</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
 
-                    <tbody>
-                        {formulario.map((e) => (
-                            <tr key={e.id}>
-                                <td>{e.name}</td>
-                                <td>{e.email}</td>
-                                <td>{formatCPF(e.cpf)}</td>
-                                <td>{e.nomeCredencial}</td>
-                                <td>{renderStatus(e.statusPagamento)}</td>
-                                <td>
-                                    <DeleteButton onClick={() => deletar(e.id)}>
-                                        Excluir
-                                    </DeleteButton>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
-            </Container>
-        </DashboardAdmin>
+                <tbody>
+                    {formulario.map((e) => (
+                        <tr key={e.id}>
+                            <td>{e.name}</td>
+                            <td>{e.email}</td>
+                            <td>{formatCPF(e.cpf)}</td>
+                            <td>{e.nomeCredencial}</td>
+                            <td>{renderStatus(e.statusPagamento)}</td>
+                            <td>
+                                <DeleteButton onClick={() => deletar(e.id)}>
+                                    Excluir
+                                </DeleteButton>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
+        </Container>
     );
 };

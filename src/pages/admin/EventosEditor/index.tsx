@@ -11,7 +11,6 @@ import {
     DeleteButton,
     Header,
 } from "./styles";
-import { DashboardAdmin } from "../DashboardAdmin";
 import { toast } from "react-toastify";
 
 export function EventosEditor() {
@@ -127,79 +126,77 @@ export function EventosEditor() {
     };
 
     return (
-        <DashboardAdmin>
-            <Container>
+        <Container>
 
-                <Header>Gerenciar Eventos</Header>
+            <Header>Gerenciar Eventos</Header>
 
-                {/* Formulário para criar evento */}
-                <FormCard>
-                    <Input
-                        placeholder="Título"
-                        value={form.titulo}
-                        onChange={e => setForm({ ...form, titulo: e.target.value })}
-                    />
+            {/* Formulário para criar evento */}
+            <FormCard>
+                <Input
+                    placeholder="Título"
+                    value={form.titulo}
+                    onChange={e => setForm({ ...form, titulo: e.target.value })}
+                />
 
-                    <Input
-                        type="date"
-                        value={form.dataInicio}
-                        onChange={e => setForm({ ...form, dataInicio: e.target.value })}
-                    />
+                <Input
+                    type="date"
+                    value={form.dataInicio}
+                    onChange={e => setForm({ ...form, dataInicio: e.target.value })}
+                />
 
-                    <Input
-                        type="date"
-                        value={form.dataFim}
-                        onChange={e => setForm({ ...form, dataFim: e.target.value })}
-                    />
+                <Input
+                    type="date"
+                    value={form.dataFim}
+                    onChange={e => setForm({ ...form, dataFim: e.target.value })}
+                />
 
-                    <TextArea
-                        placeholder="Descrição"
-                        value={form.descricao}
-                        onChange={e => setForm({ ...form, descricao: e.target.value })}
-                    />
+                <TextArea
+                    placeholder="Descrição"
+                    value={form.descricao}
+                    onChange={e => setForm({ ...form, descricao: e.target.value })}
+                />
 
-                    {/* Input de imagem */}
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={e => setFile(e.target.files?.[0] || null)}
-                    />
+                {/* Input de imagem */}
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={e => setFile(e.target.files?.[0] || null)}
+                />
 
-                    <ButtonSalvar onClick={salvar}>Salvar Evento</ButtonSalvar>
-                </FormCard>
+                <ButtonSalvar onClick={salvar}>Salvar Evento</ButtonSalvar>
+            </FormCard>
 
-                {/* Tabela com eventos existentes */}
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>Imagem</th>
-                            <th>Título</th>
-                            <th>Data início</th>
-                            <th>Data fim</th>
-                            <th>Ações</th>
+            {/* Tabela com eventos existentes */}
+            <Table>
+                <thead>
+                    <tr>
+                        <th>Imagem</th>
+                        <th>Título</th>
+                        <th>Data início</th>
+                        <th>Data fim</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {Array.isArray(eventos) && eventos.map(e => (
+                        <tr key={e.id}>
+                            <td><Img src={e.imagem || ''} /></td>
+                            <td>{e.titulo}</td>
+                            <td>{e.dataInicio ? new Date(e.dataInicio).toLocaleDateString("pt-BR") : '-'}</td>
+                            <td>{e.dataFim ? new Date(e.dataFim).toLocaleDateString("pt-BR") : '-'}</td>
+                            <td>
+                                <DeleteButton onClick={() => deletar(e.id)}>
+                                    Excluir
+                                </DeleteButton>
+                            </td>
                         </tr>
-                    </thead>
+                    ))}
+                </tbody>
 
-                    <tbody>
-                        {Array.isArray(eventos) && eventos.map(e => (
-                            <tr key={e.id}>
-                                <td><Img src={e.imagem || ''} /></td>
-                                <td>{e.titulo}</td>
-                                <td>{e.dataInicio ? new Date(e.dataInicio).toLocaleDateString("pt-BR") : '-'}</td>
-                                <td>{e.dataFim ? new Date(e.dataFim).toLocaleDateString("pt-BR") : '-'}</td>
-                                <td>
-                                    <DeleteButton onClick={() => deletar(e.id)}>
-                                        Excluir
-                                    </DeleteButton>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
+            </Table>
 
-                </Table>
-
-            </Container>
-        </DashboardAdmin>
+        </Container>
     );
 }
 

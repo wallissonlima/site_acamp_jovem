@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import api from "../../../config/api";
-import { DashboardAdmin } from "../DashboardAdmin";
 import {
     PageContainer,
     Title,
@@ -53,39 +52,39 @@ export const DepoimentosEditor = () => {
     };
 
     return (
-        <DashboardAdmin>
-            <PageContainer>
 
-                <Title>Gerenciar Depoimentos</Title>
+        <PageContainer>
 
-                <AddBox>
-                    <TextArea
-                        placeholder="Escreva um novo depoimento..."
-                        value={novoTexto}
-                        onChange={(e) => setNovoTexto(e.target.value)}
-                    />
-                    <Button onClick={salvarNovo}>+ Adicionar</Button>
-                </AddBox>
+            <Title>Gerenciar Depoimentos</Title>
 
-                <List>
-                    {Array.isArray(depoimentos) && depoimentos.length > 0 ? (
-                        depoimentos.map(d => (
-                            <ItemCard key={d.id}>
-                                <TextArea
-                                    value={d.texto}
-                                    onChange={(e) => atualizar(d.id, e.target.value)}
-                                />
-                                <DeleteBtn onClick={() => excluir(d.id)}>
-                                    Remover
-                                </DeleteBtn>
-                            </ItemCard>
-                        ))
-                    ) : (
-                        <p>Nenhum depoimento encontrado.</p>
-                    )}
-                </List>
+            <AddBox>
+                <TextArea
+                    placeholder="Escreva um novo depoimento..."
+                    value={novoTexto}
+                    onChange={(e) => setNovoTexto(e.target.value)}
+                />
+                <Button onClick={salvarNovo}>+ Adicionar</Button>
+            </AddBox>
 
-            </PageContainer>
-        </DashboardAdmin>
+            <List>
+                {Array.isArray(depoimentos) && depoimentos.length > 0 ? (
+                    depoimentos.map(d => (
+                        <ItemCard key={d.id}>
+                            <TextArea
+                                value={d.texto}
+                                onChange={(e) => atualizar(d.id, e.target.value)}
+                            />
+                            <DeleteBtn onClick={() => excluir(d.id)}>
+                                Remover
+                            </DeleteBtn>
+                        </ItemCard>
+                    ))
+                ) : (
+                    <p>Nenhum depoimento encontrado.</p>
+                )}
+            </List>
+
+        </PageContainer>
+
     );
 };

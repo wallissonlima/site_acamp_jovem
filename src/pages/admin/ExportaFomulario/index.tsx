@@ -1,4 +1,3 @@
-import { DashboardAdmin } from "../DashboardAdmin";
 import { BackButton, ButtonEditor, Container, DeleteButton, Header, Table } from "./styles";
 import { useState, useEffect } from "react";
 import api from "../../../config/api";
@@ -98,60 +97,58 @@ export const ExportaFormulario = () => {
     }, []);
 
     return (
-        <DashboardAdmin>
-            <Container>
-                <Header>
-                    <h2>
-                        Exporta Formulário
-                    </h2>
-                    <ButtonEditor>
-                        <div>
-                            <BackButton onClick={exportToExcel}>Exporta</BackButton>
-                        </div>
-                        {/* <div>
+        <Container>
+            <Header>
+                <h2>
+                    Exporta Formulário
+                </h2>
+                <ButtonEditor>
+                    <div>
+                        <BackButton onClick={exportToExcel}>Exporta</BackButton>
+                    </div>
+                    {/* <div>
                             <DeleteButton onClick={deletarTudo}>Limpa o banco</DeleteButton>
                         </div> */}
-                    </ButtonEditor>
-                </Header>
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Email</th>
-                            <th>CPF</th>
-                            <th>Telefone</th>
-                            <th>Nome Credencial</th>
-                            <th>Status</th>
-                            <th>Ações</th>
+                </ButtonEditor>
+            </Header>
+            <Table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>CPF</th>
+                        <th>Telefone</th>
+                        <th>Nome Credencial</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {formulario.map((e) => (
+                        <tr key={e.id}>
+                            <td>{e.name}</td>
+                            <td>{e.email}</td>
+                            <td>{formatCPF(e.cpf)}</td>
+
+                            <td>
+                                {e.telefone
+                                    ?.replace(/\D/g, "")             // Remove não números
+                                    .replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3")
+                                }
+                            </td>
+                            <td>{e.nomeCredencial}</td>
+                            <td>{renderStatus(e.statusPagamento)}</td>
+
+                            <td>
+                                <DeleteButton onClick={() => deletar(e.id)}>
+                                    Excluir
+                                </DeleteButton>
+                            </td>
                         </tr>
-                    </thead>
-
-                    <tbody>
-                        {formulario.map((e) => (
-                            <tr key={e.id}>
-                                <td>{e.name}</td>
-                                <td>{e.email}</td>
-                                <td>{formatCPF(e.cpf)}</td>
-
-                                <td>
-                                    {e.telefone
-                                        ?.replace(/\D/g, "")             // Remove não números
-                                        .replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3")
-                                    }
-                                </td>
-                                <td>{e.nomeCredencial}</td>
-                                <td>{renderStatus(e.statusPagamento)}</td>
-
-                                <td>
-                                    <DeleteButton onClick={() => deletar(e.id)}>
-                                        Excluir
-                                    </DeleteButton>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
-            </Container>
-        </DashboardAdmin>
+                    ))}
+                </tbody>
+            </Table>
+        </Container>
     );
 };

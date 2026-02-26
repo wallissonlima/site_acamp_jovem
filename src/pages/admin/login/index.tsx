@@ -26,6 +26,15 @@ export const LoginAdmin = () => {
             setUser({ email: storedEmail || '', password: storedPassword || '' });
         }
     }, []);
+    // NOVO: bloqueia acesso ao login se já estiver logado
+    useEffect(() => {
+        const token = localStorage.getItem("access_token");
+        const admin = localStorage.getItem("admin");
+
+        if (token && admin) {
+            navigate("/admin/config", { replace: true });
+        }
+    }, [navigate]);
 
     // Config API
     const ax = axios.create({

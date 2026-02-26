@@ -1,13 +1,27 @@
-import { Navigate } from "react-router-dom";
-import type { ReactNode } from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-export function ProtectedRoute({ children }: { children: ReactNode }) {
-  const token = localStorage.getItem("access_token");
-  const admin = localStorage.getItem("admin");
+export function ProtectedRoute() {
+  const [authorized, setAuthorized] = useState<boolean | null>(null);
 
-  if (!token || !admin || admin === "undefined") {
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    const admin = localStorage.getItem("admin");
+
+    if (token && admin) {
+      setAuthorized(true);
+    } else {
+      setAuthorized(false);
+    }
+  }, []);
+
+  if (authorized === null) {
+    return null;
+  }
+
+  if (!authorized) {
     return <Navigate to="/admin/login" replace />;
   }
 
-  return <>{children}</>;
+  return <Outlet />;
 }

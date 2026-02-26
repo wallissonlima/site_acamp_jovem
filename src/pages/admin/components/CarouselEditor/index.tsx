@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-
-import { DashboardAdmin } from "../../DashboardAdmin"; // Layout/admin wrapper
 import {
     Container,
     ItemCard,
@@ -140,50 +138,49 @@ export const CarouselEditor: React.FC = () => {
     };
 
     return (
-        <DashboardAdmin>
-            <Container>
-                <h1>Editor do Carrossel</h1>
 
-                <ButtonAdd onClick={addItem}>+ Adicionar Banner</ButtonAdd>
+        <Container>
+            <h1>Editor do Carrossel</h1>
 
-                <Grid>
-                    {Array.isArray(items) && items.map(item => {
-                        const key = (item.id ?? item.tempId) as any;
-                        return (
-                            <ItemCard key={key}>
-                                {item.src ? (
-                                    <PreviewImg src={item.src} alt="" />
-                                ) : <div style={{ height: 150, background: '#0f1220', borderRadius: 8 }} />}
+            <ButtonAdd onClick={addItem}>+ Adicionar Banner</ButtonAdd>
 
-                                <InputFile
-                                    type="file"
-                                    onChange={(e) => {
-                                        const file = e.target.files?.[0];
-                                        if (file) handleImage(key, file);
-                                    }}
-                                />
+            <Grid>
+                {Array.isArray(items) && items.map(item => {
+                    const key = (item.id ?? item.tempId) as any;
+                    return (
+                        <ItemCard key={key}>
+                            {item.src ? (
+                                <PreviewImg src={item.src} alt="" />
+                            ) : <div style={{ height: 150, background: '#0f1220', borderRadius: 8 }} />}
 
-                                <InputText
-                                    value={item.altText}
-                                    placeholder="Texto alternativo"
-                                    onChange={(e) => handleChange(key, "altText", e.target.value)}
-                                />
+                            <InputFile
+                                type="file"
+                                onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) handleImage(key, file);
+                                }}
+                            />
 
-                                <InputText
-                                    type="number"
-                                    value={item.sortOrder ?? 0}
-                                    onChange={(e) => handleChange(key, "sortOrder", Number(e.target.value))}
-                                />
+                            <InputText
+                                value={item.altText}
+                                placeholder="Texto alternativo"
+                                onChange={(e) => handleChange(key, "altText", e.target.value)}
+                            />
 
-                                <ButtonDelete onClick={() => removeItem(key, item.id)}>Remover</ButtonDelete>
+                            <InputText
+                                type="number"
+                                value={item.sortOrder ?? 0}
+                                onChange={(e) => handleChange(key, "sortOrder", Number(e.target.value))}
+                            />
 
-                            </ItemCard>
-                        );
-                    })}
-                </Grid>
+                            <ButtonDelete onClick={() => removeItem(key, item.id)}>Remover</ButtonDelete>
 
-                <ButtonSave onClick={save}>Salvar alterações</ButtonSave>
-            </Container>
-        </DashboardAdmin>
+                        </ItemCard>
+                    );
+                })}
+            </Grid>
+
+            <ButtonSave onClick={save}>Salvar alterações</ButtonSave>
+        </Container>
     );
 };

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import api from "../../../config/api";
-import { DashboardAdmin } from "../DashboardAdmin";
 import {
     Container,
     Card,
@@ -88,7 +87,6 @@ export const CronogramaEditor = () => {
     }, []);
 
     return (
-        <DashboardAdmin>
             <Container>
 
                 <Title>📅 Editor de Cronograma</Title>
@@ -159,6 +157,6 @@ export const CronogramaEditor = () => {
                 </Table>
 
             </Container>
-        </DashboardAdmin>
+
     );
 };
