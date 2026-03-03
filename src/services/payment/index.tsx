@@ -1,4 +1,4 @@
-import api from "../../config/api";
+import { apiPublic } from "../../config/api/apiPublic/apiPublic";
 
 
 export type TipoInscricao = "PARTICIPANTE" | "SERVO";
@@ -10,12 +10,12 @@ interface ValoresResponse {
 
 export const paymentService = {
     async buscarValores(): Promise<ValoresResponse> {
-        const response = await api.get("/api/valor-incricao");
+        const response = await apiPublic.get("/api/valor-incricao");
         return response.data;
     },
 
     async criarPagamento(tipo: TipoInscricao, valor: number) {
-        const response = await api.post("/api/payments/pagamento", {
+        const response = await apiPublic.post("/api/payments/pagamento", {
             tipo,
             valor,
         });

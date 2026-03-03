@@ -3,7 +3,8 @@ import { EventTimeline } from "../../components/EventTimeline";
 import { Footer } from "../../components/footer";
 import { Header } from "../../components/Header";
 import { Content } from "./styles";
-import api from "../../config/api";
+import { apiPublic } from "../../config/api/apiPublic/apiPublic";
+
 
 export const Cronograma = () => {
     const [milestones, setMilestones] = useState([]);
@@ -11,7 +12,7 @@ export const Cronograma = () => {
 
     const loadTimeline = async () => {
         try {
-            const res = await api.get("/api/timeline");
+            const res = await apiPublic.get("/api/timeline");
 
             // Certifica que o valor existe
             setMilestones(res.data.milestones ?? []);

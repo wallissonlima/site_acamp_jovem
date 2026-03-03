@@ -167,6 +167,7 @@ export const FormAcampa = forwardRef<HTMLFormElement, { onSuccess?: () => void }
               style={{ textTransform: "uppercase" }}
               value={formData.nomeCredencial}
               onChange={handleChange}
+              placeholder="NOME E SOBRENOME"
             />
             <label className="nameLabel">Nome para Credencial</label>
           </div>

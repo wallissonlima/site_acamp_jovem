@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../../../config/api";
+
 import {
     Container,
     Card,
@@ -14,6 +14,7 @@ import {
     Table,
 } from "./styles";
 import { toast } from "react-toastify";
+import { api } from "../../../config/api";
 
 export const CronogramaEditor = () => {
     const token = localStorage.getItem("access_token");

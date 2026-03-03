@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../../../config/api";
+
 import {
     Container,
     FormCard,
@@ -12,6 +12,7 @@ import {
     Header,
 } from "./styles";
 import { toast } from "react-toastify";
+import { api } from "../../../config/api";
 
 export function EventosEditor() {
     // Token salvo no navegador para autenticação

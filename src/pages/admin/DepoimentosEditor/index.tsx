@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../../../config/api";
+;
 import {
     PageContainer,
     Title,
@@ -10,6 +10,7 @@ import {
     ItemCard,
     DeleteBtn
 } from "./styles";
+import { api } from "../../../config/api";
 
 export const DepoimentosEditor = () => {
     const [depoimentos, setDepoimentos] = useState([]);

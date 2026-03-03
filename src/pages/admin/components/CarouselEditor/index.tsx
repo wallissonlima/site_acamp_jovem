@@ -10,8 +10,9 @@ import {
     InputText,
     Grid
 } from "./styles"; // Componentes estilizados
-import api from "../../../../config/api"; // Instância do Axios configurada
+
 import { toast } from "react-toastify";
+import { api } from "../../../../config/api";
 
 // Tipo do item do carousel
 type Item = {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../../../config/api";
+
 import {
     Form,
     Row,
@@ -15,6 +15,7 @@ import {
 } from "./styles";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { api } from "../../../config/api";
 
 type ContentMap = Record<string, { id?: number; value?: string }>;
 

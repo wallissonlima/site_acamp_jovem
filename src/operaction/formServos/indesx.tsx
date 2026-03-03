@@ -139,10 +139,11 @@ export const FormServos = forwardRef<HTMLFormElement, FormServosProps>(
                             name="nomeCredencial"
                             type="text"
                             className="inputName"
-                            placeholder="Nome e sobrenome"
+                            placeholder="NOME E SOBRENOME"
                             required
                             value={formData.nomeCredencial}
                             onChange={handleChange}
+
                         />
                         <label>Nome para Credencial</label>
                     </div>

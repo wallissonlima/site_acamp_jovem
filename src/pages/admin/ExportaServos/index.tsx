@@ -1,9 +1,9 @@
 import { BackButton, ButtonEditor, Container, DeleteButton, Header, Table } from "./styles";
 import { useState, useEffect } from "react";
-import api from "../../../config/api";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { toast } from "react-toastify";
+import { api } from "../../../config/api";
 
 //formata o CPF
 function formatCPF(value: any) {

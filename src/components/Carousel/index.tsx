@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Carousel } from "react-bootstrap";
 import { CarouselContainer } from "./styles";
-import api from "../../config/api";
+import { apiPublic } from "../../config/api/apiPublic/apiPublic";
+
 
 export const CustomCarousel: React.FC = () => {
     const [items, setItems] = useState<any[]>([]);
@@ -9,7 +10,7 @@ export const CustomCarousel: React.FC = () => {
     useEffect(() => {
         const load = async () => {
             try {
-                const res = await api.get("/api/carousel");
+                const res = await apiPublic.get("/api/carousel");
 
                 // 🔹 Garante que items seja sempre array
                 const list = Array.isArray(res.data)

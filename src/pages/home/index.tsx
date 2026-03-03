@@ -25,7 +25,7 @@ import acampa from "../../assets/test.png";
 import jovem from "../../assets/image.png";
 
 import { useEffect, useRef, useState } from "react";
-import api from "../../config/api";
+
 import { Modal } from "react-bootstrap";
 import { FormAcampa } from "../../operaction/formAcampa";
 import { MercadoPagoButton } from "../admin/ButtonPago";
@@ -33,6 +33,7 @@ import { EventTimeline } from "../../components/EventTimeline";
 import { FormServos } from "../../operaction/formServos/indesx";
 import axios from "axios";
 import { adminService } from "../../services/admin";
+import { apiPublic } from "../../config/api/apiPublic/apiPublic";
 
 function limitarTexto(texto: string, limite = 60) {
     if (!texto) return '';
@@ -65,7 +66,7 @@ export const Home = () => {
 
     useEffect(() => {
         // 🔹 Conteúdo Home
-        api.get('/api/content', { params: { page: 'home' } })
+        apiPublic.get('/api/content', { params: { page: 'home' } })
             .then(r => {
                 const data = Array.isArray(r.data)
                     ? r.data.reduce((acc: any, item: any) => {
@@ -79,7 +80,7 @@ export const Home = () => {
             .catch(() => { });
 
         // 🔹 Eventos (CORREÇÃO AQUI 👇)
-        api.get("/api/eventos")
+        apiPublic.get("/api/eventos")
             .then(res => {
                 const eventosArray = Array.isArray(res.data)
                     ? res.data
@@ -92,7 +93,7 @@ export const Home = () => {
 
 
         // 🔹 Depoimentos
-        api.get('/api/depoimentos')
+        apiPublic.get('/api/depoimentos')
             .then(r => {
                 const depoArray = Array.isArray(r.data)
                     ? r.data
@@ -121,7 +122,7 @@ export const Home = () => {
     const right = content["acampa_image_right"];
 
     const loadTimeline = async () => {
-        const res = await api.get("/api/timeline");
+        const res = await apiPublic.get("/api/timeline");
         setMilestones(res.data.milestones);
         setEventDate(res.data.eventDate);
     };

@@ -1,4 +1,6 @@
-import api from "../../config/api";
+import { api } from "../../config/api";
+import { apiPublic } from "../../config/api/apiPublic/apiPublic";
+
 
 interface StatusResponse {
     limiteParticipantes: number;
@@ -16,13 +18,13 @@ interface ValoresResponse {
 export const adminService = {
     // 🔹 Buscar status e limites
     async buscarStatus(): Promise<StatusResponse> {
-        const response = await api.get("/api/limite-inscricao/status");
+        const response = await apiPublic.get("/api/limite-inscricao/status");
         return response.data;
     },
 
     // 🔹 Buscar valores
     async buscarValores(): Promise<ValoresResponse> {
-        const response = await api.get("/api/valor-incricao");
+        const response = await apiPublic.get("/api/valor-incricao");
         return response.data;
     },
 

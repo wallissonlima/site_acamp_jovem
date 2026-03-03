@@ -1,10 +1,11 @@
-import api from "../../config/api";
+
+import { apiPublic } from "../../config/api/apiPublic/apiPublic";
 import type { iFormularioServoProps } from "../../interfaces/iFormularioServos";
 
 export const formularioServosService = {
     async criarInscricao(data: iFormularioServoProps) {
         // 🔎 verifica CPF
-        const check = await api.get(
+        const check = await apiPublic.get(
             `/api/formularioServos/exists-cpf/${data.cpf}`
         );
 
@@ -13,7 +14,7 @@ export const formularioServosService = {
         }
 
         // 🚀 cria inscrição
-        await api.post("/api/formularioServos", {
+        await apiPublic.post("/api/formularioServos", {
             tipo: "SERVO",
             ...data,
         });
