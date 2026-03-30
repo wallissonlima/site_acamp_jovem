@@ -35,6 +35,7 @@ import axios from "axios";
 import { adminService } from "../../services/admin";
 import { apiPublic } from "../../config/api/apiPublic/apiPublic";
 
+
 function limitarTexto(texto: string, limite = 60) {
     if (!texto) return '';
     return texto.length > limite
@@ -63,6 +64,7 @@ export const Home = () => {
     const [totalServos, setTotalServos] = useState(0);
     const [tipoPagamento, setTipoPagamento] = useState<'SERVO' | 'PARTICIPANTE' | null>(null);
     const [showPayment, setShowPayment] = useState(false);
+    const [inscricaoId, setInscricaoId] = useState<number | null>(null);
 
     useEffect(() => {
         // 🔹 Conteúdo Home
@@ -312,15 +314,17 @@ export const Home = () => {
                     {formTipo === 'acampa' ? (
                         <FormAcampa
                             ref={formRef}
-                            onSuccess={() => {
+                            onSuccess={(data: any) => {
+                                setInscricaoId(data.id);
                                 setOpenInscricao(false);
-                                setShowPayment(true); // 👈 abre pagamento
+                                setShowPayment(true);
                             }}
                         />
                     ) : (
                         <FormServos
                             ref={formRef}
-                            onSuccess={() => {
+                            onSuccess={(data: any) => {
+                                setInscricaoId(data.id);
                                 setOpenInscricao(false);
                                 setShowPayment(true);
                             }}
@@ -353,8 +357,11 @@ export const Home = () => {
                         Agora finalize o pagamento.
                     </p>
 
-                    {tipoPagamento && (
-                        <MercadoPagoButton tipo={tipoPagamento} />
+                    {tipoPagamento && inscricaoId && (
+                        <MercadoPagoButton
+                            tipo={tipoPagamento}
+                            inscricaoId={inscricaoId}
+                        />
                     )}
 
                     <button

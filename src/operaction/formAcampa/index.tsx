@@ -14,7 +14,11 @@ function formatCPF(value: string) {
     .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
 }
 
-export const FormAcampa = forwardRef<HTMLFormElement, { onSuccess?: () => void }>(
+type FormAcampaProps = {
+  onSuccess?: (data: { id: number | string }) => void;
+};
+
+export const FormAcampa = forwardRef<HTMLFormElement, FormAcampaProps>(
   ({ onSuccess }, ref) => {
     const [formData, setFormData] = useState<iFormularioProps>({
       name: "",
@@ -66,10 +70,11 @@ export const FormAcampa = forwardRef<HTMLFormElement, { onSuccess?: () => void }
           descricao: formData.descricao || undefined,
         };
 
-        await formularioService.criarInscricao(payload);
+        const response = await formularioService.criarInscricao(payload);
 
         toast.success("Inscrição enviada com sucesso!");
-        onSuccess?.();
+
+        onSuccess?.({ id: response.id }); // ✅ AGORA ENVIA O ID
 
         setFormData({
           name: "",

@@ -13,6 +13,8 @@ export const formularioService = {
         }
 
         // 🚀 cria inscrição
-        await apiPublic.post("/api/formulario", data);
+        const response = await apiPublic.post("/api/formulario", data);
+
+        return response.data;
     },
 };

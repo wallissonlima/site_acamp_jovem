@@ -14,6 +14,9 @@ import { ConfigAdmin } from "./src/pages/admin/components";
 import { ExportaFormulario } from "./src/pages/admin/ExportaFomulario";
 import { ExportaServos } from "./src/pages/admin/ExportaServos";
 import { ContentEditor } from "./src/pages/admin/ContentEditor";
+import SucessoPagamento from "./src/pages/pagesStatus/SucessoPagamento";
+import PagamentoPendente from "./src/pages/pagesStatus/PagamentoPendente";
+import PagamentoErro from "./src/pages/pagesStatus/PagamentoErro";
 
 export function Router() {
   return (
@@ -28,6 +31,9 @@ export function Router() {
         <Route path="/cronograma" element={<Cronograma />} />
         <Route path="/contato" element={<Contato />} />
         <Route path="/admin/login" element={<LoginAdmin />} />
+        <Route path="/sucesso" element={<SucessoPagamento />} />
+        <Route path="/pendente" element={<PagamentoPendente />} />
+        <Route path="/erro" element={<PagamentoErro />} />
 
         {/* grupo protegido */}
         <Route element={<ProtectedRoute />}>

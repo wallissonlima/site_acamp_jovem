@@ -1,12 +1,13 @@
 import React, { useState, forwardRef } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { CustomDiv, CustomForm } from "./styles";
 import { formularioServosService } from "../../services/formularioServos";
+import { paymentService } from "../../services/payment";
+
 
 /* 🔹 Props */
 interface FormServosProps {
-    onSuccess?: () => void;
+    onSuccess?: (data: { id: number | string }) => void;
 }
 
 /* 🔹 Máscara CPF */
@@ -45,7 +46,7 @@ export const FormServos = forwardRef<HTMLFormElement, FormServosProps>(
             e.preventDefault();
 
             try {
-                await formularioServosService.criarInscricao({
+                const response = await formularioServosService.criarInscricao({
                     name: formData.name,
                     email: formData.email,
                     cpf: formData.cpf,
@@ -56,22 +57,35 @@ export const FormServos = forwardRef<HTMLFormElement, FormServosProps>(
                     descricao: formData.descricao || null,
                 });
 
+                console.log("Resposta da inscrição:", response);
+                console.log("ID da inscrição:", response?.id);
+
+                localStorage.setItem("inscricaoId", String(response.id));
+                localStorage.setItem("inscricaoTipo", "SERVO");
+
+                const pagamento = await paymentService.criarPagamento(response.id);
+
+                console.log("Pagamento:", pagamento);
+
                 toast.success("Inscrição enviada com sucesso!");
-                onSuccess?.();
 
-                setFormData({
-                    name: "",
-                    email: "",
-                    cpf: "",
-                    telefone: "",
-                    nomeCredencial: "",
-                    tamanhoCamiseta: "",
-                    alergiaRestricao: "",
-                    descricao: "",
-                });
+                onSuccess?.({ id: response.id });
 
+                if (pagamento?.init_point || pagamento?.sandbox_init_point) {
+                    window.location.href =
+                        pagamento.init_point || pagamento.sandbox_init_point;
+                    return;
+                }
+
+                toast.error("Não foi possível obter o link de pagamento.");
             } catch (error: any) {
-                toast.error(error.message || "Erro ao enviar inscrição.");
+                console.error("ERRO FRONT:", error);
+                console.error("ERRO BACKEND:", error?.response?.data);
+                toast.error(
+                    error?.response?.data?.message ||
+                    error.message ||
+                    "Erro ao enviar inscrição."
+                );
             }
         };
 
@@ -111,9 +125,7 @@ export const FormServos = forwardRef<HTMLFormElement, FormServosProps>(
                             required
                             value={formatCPF(formData.cpf)}
                             onChange={(e) => {
-                                const onlyNums = e.target.value
-                                    .replace(/\D/g, "")
-                                    .slice(0, 11);
+                                const onlyNums = e.target.value.replace(/\D/g, "").slice(0, 11);
                                 setFormData((prev) => ({
                                     ...prev,
                                     cpf: onlyNums,
@@ -143,7 +155,6 @@ export const FormServos = forwardRef<HTMLFormElement, FormServosProps>(
                             required
                             value={formData.nomeCredencial}
                             onChange={handleChange}
-
                         />
                         <label>Nome para Credencial</label>
                     </div>
@@ -181,7 +192,7 @@ export const FormServos = forwardRef<HTMLFormElement, FormServosProps>(
                             <option>Sim</option>
                             <option>Não</option>
                         </select>
-                        <label className="emailLabel">Possui Alergia ou Restrição?</label>
+                        <label>Possui Alergia ou Restrição?</label>
                     </div>
 
                     <div style={{ gridColumn: "1 / span 2" }}>
@@ -192,11 +203,10 @@ export const FormServos = forwardRef<HTMLFormElement, FormServosProps>(
                             value={formData.descricao}
                             onChange={handleChange}
                         />
-                        <label className="descricaoLabel">Descrição</label>
+                        <label>Descrição</label>
                     </div>
                 </CustomDiv>
 
-                {/* submit invisível */}
                 <button type="submit" style={{ display: "none" }} />
             </CustomForm>
         );
