@@ -14,9 +14,7 @@ import { ConfigAdmin } from "./src/pages/admin/components";
 import { ExportaFormulario } from "./src/pages/admin/ExportaFomulario";
 import { ExportaServos } from "./src/pages/admin/ExportaServos";
 import { ContentEditor } from "./src/pages/admin/ContentEditor";
-import SucessoPagamento from "./src/pages/pagesStatus/SucessoPagamento";
-import PagamentoPendente from "./src/pages/pagesStatus/PagamentoPendente";
-import PagamentoErro from "./src/pages/pagesStatus/PagamentoErro";
+import { PaymentStatusChecker } from "./src/components/PaymentStatusChecker";
 
 export function Router() {
   return (
@@ -24,42 +22,40 @@ export function Router() {
       <ToastContainer autoClose={2000} />
 
       <Routes>
-
         {/* públicas */}
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/home" element={<Home />} />
         <Route path="/cronograma" element={<Cronograma />} />
         <Route path="/contato" element={<Contato />} />
         <Route path="/admin/login" element={<LoginAdmin />} />
-        <Route path="/sucesso" element={<SucessoPagamento />} />
-        <Route path="/pendente" element={<PagamentoPendente />} />
-        <Route path="/erro" element={<PagamentoErro />} />
+
+        {/* retorno do Mercado Pago */}
+        <Route
+          path="/sucesso"
+          element={<PaymentStatusChecker mode="success" />}
+        />
+        <Route
+          path="/pendente"
+          element={<PaymentStatusChecker mode="pending" />}
+        />
+        <Route
+          path="/erro"
+          element={<PaymentStatusChecker mode="error" />}
+        />
 
         {/* grupo protegido */}
         <Route element={<ProtectedRoute />}>
-
           <Route element={<DashboardAdmin />}>
-
             <Route path="/admin/home" element={<HomeEditor />} />
-
             <Route path="/admin/eventos" element={<EventosEditor />} />
-
             <Route path="/admin/cronograma" element={<CronogramaEditor />} />
-
             <Route path="/admin/depoimentos" element={<DepoimentosEditor />} />
-
             <Route path="/admin/config" element={<ConfigAdmin />} />
-
             <Route path="/admin/configInscricoes" element={<ContentEditor />} />
-
             <Route path="/admin/exports" element={<ExportaFormulario />} />
-
             <Route path="/admin/exportsServos" element={<ExportaServos />} />
-
           </Route>
-
         </Route>
-
       </Routes>
     </main>
   );
