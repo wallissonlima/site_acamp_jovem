@@ -57,15 +57,10 @@ export const FormServos = forwardRef<HTMLFormElement, FormServosProps>(
                     descricao: formData.descricao || null,
                 });
 
-                console.log("Resposta da inscrição:", response);
-                console.log("ID da inscrição:", response?.id);
-
                 localStorage.setItem("inscricaoId", String(response.id));
                 localStorage.setItem("inscricaoTipo", "SERVO");
 
                 const pagamento = await paymentService.criarPagamento(response.id);
-
-                console.log("Pagamento:", pagamento);
 
                 toast.success("Inscrição enviada com sucesso!");
 

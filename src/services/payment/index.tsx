@@ -22,13 +22,10 @@ export const paymentService = {
 
   async criarPagamento(inscricaoId: number): Promise<CriarPagamentoResponse> {
     try {
-      console.log("ENVIANDO PAGAMENTO:", { inscricaoId });
 
       const response = await apiPublic.post("/api/payments/pagamento", {
         inscricaoId,
       });
-
-      console.log("RETORNO criarPagamento:", response.data);
 
       return response.data;
     } catch (error: any) {

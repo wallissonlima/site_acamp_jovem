@@ -56,8 +56,6 @@ export function MercadoPagoButton({ tipo, inscricaoId }: Props) {
 
       const pagamento = await paymentService.criarPagamento(inscricaoId);
 
-      console.log("PAGAMENTO:", pagamento);
-
       if (!pagamento?.preferenceId) {
         throw new Error("preferenceId não retornado pelo backend");
       }

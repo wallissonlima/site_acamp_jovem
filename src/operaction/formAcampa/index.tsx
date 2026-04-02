@@ -3,6 +3,7 @@ import { CustomDiv, CustomForm } from "./styles";
 import { toast } from "react-toastify";
 import type { iFormularioProps } from "../../interfaces/iFomulario";
 import { formularioService } from "../../services/formulario";
+import { paymentService } from "../../services/payment";
 
 // 👉 FUNÇÃO DA MÁSCARA DE CPF
 function formatCPF(value: string) {
@@ -42,7 +43,7 @@ export const FormAcampa = forwardRef<HTMLFormElement, FormAcampaProps>(
       setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       if (
@@ -72,27 +73,35 @@ export const FormAcampa = forwardRef<HTMLFormElement, FormAcampaProps>(
 
         const response = await formularioService.criarInscricao(payload);
 
+        if (!response?.id) {
+          throw new Error("A API não retornou o ID da inscrição.");
+        }
+
+        localStorage.setItem("inscricaoId", String(response.id));
+        localStorage.setItem("inscricaoTipo", "PARTICIPANTE");
+
+        const pagamento = await paymentService.criarPagamento(response.id);
+
         toast.success("Inscrição enviada com sucesso!");
 
-        onSuccess?.({ id: response.id }); // ✅ AGORA ENVIA O ID
+        onSuccess?.({ id: response.id });
 
-        setFormData({
-          name: "",
-          email: "",
-          dataNascimento: "",
-          cpf: "",
-          telefone: "",
-          nomeCredencial: "",
-          tamanhoCamiseta: "",
-          nomeResponsavel: "",
-          telefoneResponsavel: "",
-          autorizacaoImagem: "",
-          alergiaRestricao: "",
-          descricao: "",
-        });
+        if (pagamento?.init_point || pagamento?.sandbox_init_point) {
+          window.location.href =
+            pagamento.init_point || pagamento.sandbox_init_point;
+          return;
+        }
 
+        toast.error("Não foi possível obter o link de pagamento.");
       } catch (error: any) {
-        toast.error(error.message || "Erro ao enviar inscrição.");
+        console.error("ERRO FRONT:", error);
+        console.error("ERRO BACKEND:", error?.response?.data);
+
+        toast.error(
+          error?.response?.data?.message ||
+          error.message ||
+          "Erro ao enviar inscrição."
+        );
       }
     };
 

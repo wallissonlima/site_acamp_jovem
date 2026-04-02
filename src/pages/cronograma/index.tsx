@@ -30,8 +30,6 @@ export const Cronograma = () => {
     }, []);
 
     useEffect(() => {
-        console.log("EVENTDATE =>", eventDate);
-        console.log("MILESTONES =>", milestones);
     }, [eventDate, milestones]);
 
 

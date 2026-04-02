@@ -26,8 +26,6 @@ export const inscricaoStatusService = {
 
     const response = await apiPublic.get(rota);
 
-    console.log("RETORNO buscarInscricao:", response.data);
-
     return response.data as InscricaoStatusResponse;
   },
 };
